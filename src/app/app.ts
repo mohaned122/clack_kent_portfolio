@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterLink, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -16,11 +16,8 @@ export class App {
     { id: 'resume-section', label: 'Resume' },
     { id: 'services-section', label: 'Services' },
     { id: 'skills-section', label: 'Skills' },
-    { id: 'projects-section', label: 'Projects' },
     { id: 'cetificates-section', label: 'Certificates' },
-    { id: 'blog-section', label: 'My Blog' },
     { id: 'contact-section', label: 'Contact' },
-    
   ];
 
   constructor(private readonly router: Router) {}

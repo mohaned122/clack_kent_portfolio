@@ -15,9 +15,14 @@ Angular 21.1.x single-page portfolio site. Two routes: Home (`/`) and Blog (`/bl
 
 - **Standalone components** (no NgModules). Root bootstrap in `src/main.ts`.
 - **Routes**: `src/app/app.routes.ts`. Home component renders all sections via fragment-based scrolling (`ScrollService`).
-- **Legacy jQuery initialization**: `HomeComponent` calls a global `clarkInit()` declared via `declare function clarkInit(): void`. This function is defined in `public/js/clark-site.js` and wired via script tags in the HTML. Do not remove this bridge.
+- **Legacy jQuery initialization**: `HomeComponent` and `BlogComponent` declare `declare function clarkInit(): void` and call it in `ngAfterViewInit`. The function is defined in `public/js/main.js` and wired via `<script src="/js/main.js">` in `src/index.html`. Do not remove this bridge.
 - **Static assets** in `public/` — images, fonts, legacy JS (jQuery, Bootstrap, Owl Carousel, etc.), and CSS.
 - **Global styles** loaded from two files: `src/styles.scss` and `src/scss/style.scss`.
+
+## Backend & Environment
+
+- Firebase (auth, Firestore, storage) and the Gemini chatbot wiring live entirely in `src/app/services/` (firebase, auth, article, chat, contact, project, etc.) and bootstrap from `src/app/environment/environment.ts` (dev) / `environment.prod.ts`.
+- API keys in those files are placeholders (`YOUR_FIREBASE_API_KEY`, `YOUR_GEMINI_API_KEY`) — Firebase/Gemini calls fail in the dev server until real keys are supplied. Firebase client config is public-facing by design; do not add server secrets here.
 
 ## Styling
 
@@ -25,7 +30,6 @@ Angular 21.1.x single-page portfolio site. Two routes: Home (`/`) and Blog (`/bl
 - Custom color vars in `src/scss/style.scss` (`$primary: #ffbd39`, `$secondary: #a0f669`, `$black: #000000`).
 - `angular.json` silences several Sass deprecation warnings (`import`, `global-builtin`, `color-functions`, `slash-div`, `if-function`).
 - Inline styles use SCSS (`inlineStyleLanguage: "scss"`).
-- Don't step over use the same Design
 
 ## Code Conventions
 
@@ -38,8 +42,10 @@ Angular 21.1.x single-page portfolio site. Two routes: Home (`/`) and Blog (`/bl
 ## Gotchas
 
 - The `public/` directory is served as static assets (configured in `angular.json` under `assets`). Files here are NOT compiled — they are copied as-is to `dist/`.
-- `HomeComponent` has no test file and its `ngAfterViewInit` depends on the global `clarkInit` function. If you restructure this component, preserve the lifecycle hook.
-- Production build has budgets: initial bundle warning at 800kB, error at 1.5MB.
+- `HomeComponent`/`BlogComponent` have no tests, and their `ngAfterViewInit` depends on the global `clarkInit` function. If you restructure either component, preserve the lifecycle hook.
+- Vitest is configured, but **no `*.spec.ts` files exist** — `npm test` has nothing to run. Schematics generate everything with `skipTests: true`.
+- No lint or typecheck script is configured; use `ng build` to type-check.
+- Production build has budgets: initial bundle warning at 800kB, error at 1.5MB. Firebase + `@google/generative-ai` are bundled deps — watch bundle size.
 - No e2e test framework is configured.
 
 ## Mandatory Agent Workflow

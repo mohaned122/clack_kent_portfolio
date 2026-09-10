@@ -1,0 +1,35 @@
+<section class="hero-wrap js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+          <div class="col-md-12 ftco-animate pb-5 mb-3 text-center">
+            <h1 class="mb-3 bread">Project</h1>
+            <p class="breadcrumbs"><span class="mr-2"><a routerLink="/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span class="mr-2"><a routerLink="/projects">All Projects <i class="ion-ios-arrow-forward"></i></a></span> <span>Project <i class="ion-ios-arrow-forward"></i></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 ftco-animate text-center">
+            @if (selectedProject$ | async; as selected) {
+              <div class="project img-2 ftco-animate d-flex justify-content-center align-items-center mb-4"
+                [style.background-image]="'url(' + selected.image + ')'">
+                <div class="overlay"></div>
+                <div class="text text-center p-4">
+                  <h3>{{ selected.title }}</h3>
+                  <span>{{ selected.category }}</span>
+                </div>
+              </div>
+              <h2 class="mb-3">{{ selected.title }}</h2>
+              <span class="text-primary">{{ selected.category }}</span>
+              <p class="mt-3">A small river named Duden flows by their place and supplies it with the necessary
+                regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
+              <p><a routerLink="/projects" class="btn btn-primary py-3 px-4">All Projects</a></p>
+            }
+          </div>
+        </div>
+      </div>
+    </section>

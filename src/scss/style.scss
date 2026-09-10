@@ -329,6 +329,66 @@ h1, h2, h3, h4, h5,
 	text-transform: uppercase;
 }
 
+.ftco-navbar-light {
+	.navbar-nav {
+		.nav-item {
+			&.dropdown {
+				position: relative;
+
+				> .dropdown-toggle {
+					&::after {
+						display: none;
+					}
+				}
+
+				.dropdown-menu {
+					position: absolute;
+					top: 100%;
+					left: 0;
+					min-width: 200px;
+					margin-top: 0;
+					padding: 8px 0;
+					background: $black;
+					border: 1px solid rgba($primary, .3);
+					border-radius: 0 0 6px 6px;
+					box-shadow: 0 12px 28px -8px rgba(0, 0, 0, .6);
+
+					.dropdown-item {
+						color: $white;
+						font-size: 15px;
+						text-transform: none;
+						letter-spacing: 0;
+						padding: 9px 24px;
+						white-space: nowrap;
+
+						&:hover,
+						&:focus,
+						&.active {
+							background: rgba($primary, .12);
+							color: $primary;
+						}
+					}
+				}
+			}
+		}
+
+		@include media-breakpoint-down(md) {
+			.nav-item {
+				&.dropdown {
+					.dropdown-menu {
+						position: static;
+						float: none;
+						width: 100%;
+						margin-top: 2px;
+						margin-bottom: 8px;
+						border-radius: 6px;
+					}
+				}
+			}
+		}
+	}
+}
+
 
 .hero{
 	h3.vr{
@@ -719,6 +779,35 @@ h1, h2, h3, h4, h5,
 	}
 }
 
+.typewriter {
+	min-height: 1.4em;
+
+	.type-cursor {
+		display: inline-block;
+		width: 3px;
+		height: 1em;
+		margin-left: 4px;
+		vertical-align: text-bottom;
+		background: $primary;
+		animation: typewriter-blink 1s steps(1) infinite;
+	}
+}
+
+@keyframes typewriter-blink {
+	0%, 50% {
+		opacity: 1;
+	}
+	50.01%, 100% {
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.typewriter .type-cursor {
+		animation: none;
+	}
+}
+
 
 .bg-light {
 	background: #f8f9fa!important;
@@ -879,6 +968,75 @@ h1, h2, h3, h4, h5,
 		font-weight: 600;
 		letter-spacing: 3px;
 		text-transform: uppercase;
+	}
+}
+
+//RESUME MOVING BORDER GLOW
+@property --beam-angle {
+	syntax: '<angle>';
+	initial-value: 0deg;
+	inherits: false;
+}
+
+.resume-wrap {
+	position: relative;
+	overflow: hidden;
+	transition: box-shadow .3s ease;
+
+	> * {
+		position: relative;
+		z-index: 1;
+	}
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		border-radius: inherit;
+		padding: 2px;
+		background: conic-gradient(from var(--beam-angle),
+			transparent 0deg,
+			rgba($primary, 0) 20deg,
+			rgba($primary, .9) 42deg,
+			rgba($secondary, .9) 52deg,
+			rgba($primary, .9) 62deg,
+			rgba($primary, 0) 85deg,
+			transparent 110deg,
+			transparent 360deg);
+		-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		mask-composite: exclude;
+		animation: resume-beam 4s linear infinite;
+		opacity: .45;
+		transition: opacity .3s ease;
+		pointer-events: none;
+	}
+
+	&:hover {
+		box-shadow: 0 0 20px -4px rgba($primary, .5), 0 0 45px -10px rgba($primary, .25);
+	}
+
+	&:hover::before {
+		opacity: 1;
+		animation-direction: reverse;
+	}
+}
+
+@keyframes resume-beam {
+	from {
+		--beam-angle: 0deg;
+	}
+	to {
+		--beam-angle: 360deg;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.resume-wrap::before {
+		animation: none;
+		opacity: 0;
 	}
 }
 

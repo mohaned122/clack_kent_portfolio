@@ -68,6 +68,9 @@
 
 			var onePageClick = function() {
 				$(document).on('click', '#ftco-nav a[href^="#"]', function(event) {
+					if ($(this).hasClass('dropdown-toggle')) {
+						return;
+					}
 					event.preventDefault();
 					var href = $.attr(this, 'href');
 					$('html, body').animate({
@@ -77,17 +80,49 @@
 			};
 			onePageClick();
 
-			$('nav .dropdown').hover(function() {
-				var $this = $(this);
-				$this.addClass('show');
-				$this.find('> a').attr('aria-expanded', true);
-				$this.find('.dropdown-menu').addClass('show');
-			}, function() {
-				var $this = $(this);
-				$this.removeClass('show');
-				$this.find('> a').attr('aria-expanded', false);
-				$this.find('.dropdown-menu').removeClass('show');
-			});
+			var dropdownMenu = function() {
+				var hoverable = window.matchMedia
+					? window.matchMedia('(hover: hover) and (pointer: fine)').matches
+					: false;
+
+				var setOpen = function(li, open) {
+					var $li = $(li);
+					$li.toggleClass('show', open);
+					$li.find('> .dropdown-toggle').attr('aria-expanded', open);
+					$li.find('> .dropdown-menu').toggleClass('show', open);
+				};
+
+				var closeAll = function() {
+					$('#ftco-nav .nav-item.dropdown').each(function() {
+						setOpen(this, false);
+					});
+				};
+
+				if (hoverable) {
+					$('#ftco-nav .nav-item.dropdown')
+						.on('mouseenter', function() {
+							setOpen(this, true);
+						})
+						.on('mouseleave', function() {
+							setOpen(this, false);
+						});
+				}
+
+				$('#ftco-nav').on('click', '.nav-item.dropdown > .dropdown-toggle', function(event) {
+					event.preventDefault();
+					var $li = $(this).closest('.nav-item.dropdown');
+					setOpen($li, !$li.hasClass('show'));
+				});
+
+				$('#ftco-nav').on('click', '.nav-item.dropdown .dropdown-item', closeAll);
+
+				$(document).on('click', function(event) {
+					if (!$(event.target).closest('#ftco-nav .nav-item.dropdown').length) {
+						closeAll();
+					}
+				});
+			};
+			dropdownMenu();
 
 			// scroll
 			var scrollWindow = function() {

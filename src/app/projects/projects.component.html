@@ -1,0 +1,30 @@
+<section class="hero-wrap js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+          <div class="col-md-12 ftco-animate pb-5 mb-3 text-center">
+            <h1 class="mb-3 bread">Projects</h1>
+            <p class="breadcrumbs"><span class="mr-2"><a routerLink="/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>All Projects <i class="ion-ios-arrow-forward"></i></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row">
+          @for (project of projects; track project.id) {
+            <div class="col-md-4">
+              <div class="project img ftco-animate d-flex justify-content-center align-items-center"
+                [style.background-image]="'url(' + project.image + ')'">
+                <div class="overlay"></div>
+                <div class="text text-center p-4">
+                  <h3><a [routerLink]="['/projects', project.id]">{{ project.title }}</a></h3>
+                  <span>{{ project.category }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
