@@ -487,22 +487,22 @@ h1, h2, h3, h4, h5,
 						}
 					}
 				}
-				// .icon-video{
-				// 	position: absolute;
-				// 	top: 120px;
-				// 	right: 70px;
-				// 	content: '';
-				// 	width: 70px;
-				// 	height: 70px;
-				// 	background: $white;
-				// 	@include border-radius(50%);
-				// 	span{
-				// 		font-size: 20px;
-				// 		color: $black;
-				// 	}
-				// 	span.play{
-				// 	}
-				// }
+				 .icon-video{
+				 	position: absolute;
+				 	top: 120px;
+				 	right: 70px;
+				 	content: '';
+				 	width: 70px;
+				 	height: 70px;
+				 	background: $white;
+				 	@include border-radius(50%);
+				 	span{
+				 		font-size: 20px;
+				 		color: $black;
+			 	}
+				 	span.play{
+				 	}
+				 }
 				.subheading{
 					color: $black;
 					font-weight: 600;
@@ -1225,7 +1225,7 @@ textarea.form-control {
 .ftco-footer {
 	font-size: 16px;
 	background: $black;
-	padding: 7em 0;
+	padding: 6em 0 1em;
 	z-index: 0;
 
 	.ftco-footer-logo {
