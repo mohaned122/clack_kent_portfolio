@@ -17,8 +17,10 @@ export class App {
     { id: 'services-section', label: 'Services' },
     { id: 'skills-section', label: 'Skills' },
     { id: 'projects-section', label: 'Projects' },
+    { id: 'cetificates-section', label: 'Certificates' },
     { id: 'blog-section', label: 'My Blog' },
-    { id: 'contact-section', label: 'Contact' }
+    { id: 'contact-section', label: 'Contact' },
+    
   ];
 
   constructor(private readonly router: Router) {}
