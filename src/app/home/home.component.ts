@@ -337,7 +337,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   private revealBlogCards(): void {
-    revealAnimated('#blog-section .blog-entry.ftco-animate');
+    revealAnimated('#blog-section .d-flex.ftco-animate');
   }
 
   protected blogCommentCount(blog: Article): number {

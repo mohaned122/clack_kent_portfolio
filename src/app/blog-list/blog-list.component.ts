@@ -73,6 +73,6 @@ export class BlogListComponent implements AfterViewInit, OnDestroy {
   }
 
   private revealCards(): void {
-    revealAnimated('app-blog-list .blog-entry.ftco-animate');
+    revealAnimated('app-blog-list .d-flex.ftco-animate');
   }
 }
