@@ -106,8 +106,10 @@
               @for (edu of educationEntries(); track edu.id) {
     				    <div class="resume-wrap ftco-animate">
     					    <span class="date">{{ formatDateRange(edu.startDate, edu.endDate) }}</span>
-    					    <h2>{{ edu.title }}</h2>
-    					    <span class="position">{{ edu.institution }}</span>
+    					    <h2>{{ educationTitle(edu) }}</h2>
+                  @if (edu.institution) {
+                    <span class="position">{{ edu.institution }}</span>
+                  }
                   @if (edu.description) {
                     <p class="mt-4">{{ edu.description }}</p>
                   }
@@ -125,8 +127,10 @@
               @for (exp of internshipEntries(); track exp.id) {
     				    <div class="resume-wrap ftco-animate">
     					    <span class="date">{{ formatDateRange(exp.startDate, exp.endDate) }}</span>
-    					    <h2>{{ exp.position }}</h2>
-    					    <span class="position">{{ exp.company }}</span>
+    					    <h2>{{ internshipTitle(exp) }}</h2>
+                  @if (exp.company) {
+                    <span class="position">{{ exp.company }}</span>
+                  }
                   @if (exp.description) {
                     <p class="mt-4">{{ exp.description }}</p>
                   }

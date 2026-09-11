@@ -38,10 +38,35 @@ Angular 21.1.x single-page portfolio site. Two routes: Home (`/`) and Blog (`/bl
 - Prettier (in `package.json`): 100 char width, single quotes, Angular parser for HTML.
 - EditorConfig: 2-space indent, single quotes for TS.
 - TypeScript strict mode enabled (`strict`, `noImplicitOverride`, `noPropertyAccessFromIndexSignature`, `noImplicitReturns`).
-
 ## Gotchas
 
 - The `public/` directory is served as static assets (configured in `angular.json` under `assets`). Files here are NOT compiled — they are copied as-is to `dist/`.
+
+### Dynamically-rendered content stays invisible (`.ftco-animate` reveal pitfall)
+
+Elements with class `ftco-animate` start as `opacity: 0; visibility: hidden` (`src/scss/style.scss`, `.ftco-animate`) and are only made visible when the jQuery Waypoints handler in `public/js/main.js` (`clarkInit()` → `contentWayPoint()`) adds `fadeInUp ftco-animated` to them. That handler runs once in `ngAfterViewInit` and only binds to nodes present at that time.
+
+**Problem:** Any `@for`/`@if` block that renders `.ftco-animate` elements *after* `clarkInit()` (e.g. Firebase/async data arriving a tick later) gets no Waypoint binding, so those elements never receive `fadeInUp ftco-animated` and stay permanently invisible (`visibility: hidden`). The section simply looks empty — DOM contains the cards but the page shows nothing.
+
+**Solution:** After the data lands in a signal, reveal the dynamically-added elements with the same classes the Waypoint handler uses. Reference implementation in `HomeComponent` (`src/app/home/home.component.ts`, `revealResumeCards()`):
+
+```ts
+private revealResumeCards(): void {
+  setTimeout(() => {
+    const cards = Array.from(
+      this.elementRef.nativeElement.querySelectorAll(
+        '#resume-section .resume-wrap.ftco-animate:not(.ftco-animated)'
+      )
+    ) as HTMLElement[];
+    cards.forEach((card, index) => {
+      setTimeout(() => card.classList.add('fadeInUp', 'ftco-animated'), index * 50);
+    });
+  }, 0);
+}
+```
+
+Call it from each subscription's `next()` after setting its signal. The `:not(.ftco-animated)` guard makes it idempotent, and the stagger (`index * 50`) mirrors the site's existing reveal pattern. Do NOT re-run `clarkInit()` to fix this — it re-initializes carousels/counters and double-binds waypoints. Use this same approach for any future dynamically-added `ftco-animate` content (Firestore lists, dashboards, etc.).
+
 - `HomeComponent`/`BlogComponent` have no tests, and their `ngAfterViewInit` depends on the global `clarkInit` function. If you restructure either component, preserve the lifecycle hook.
 - Vitest is configured, but **no `*.spec.ts` files exist** — `npm test` has nothing to run. Schematics generate everything with `skipTests: true`.
 - No lint or typecheck script is configured; use `ng build` to type-check.

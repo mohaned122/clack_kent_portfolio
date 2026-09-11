@@ -71,17 +71,25 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   constructor(private readonly elementRef: ElementRef) {
     this.educationSubscription = this.educationService.getAll().subscribe({
       next: (entries) => {
-        entries.sort((a, b) => this.parseStartDate(b.startDate) - this.parseStartDate(a.startDate));
+        entries.sort((a, b) => this.sortKey(b) - this.sortKey(a));
         this.educationEntries.set(entries);
+        this.revealResumeCards();
       },
-      error: () => this.educationError.set(true),
+      error: (err) => {
+        console.error('Education load failed:', err);
+        this.educationError.set(true);
+      },
     });
     this.internshipSubscription = this.internshipService.getAll().subscribe({
       next: (entries) => {
-        entries.sort((a, b) => this.parseStartDate(b.startDate) - this.parseStartDate(a.startDate));
+        entries.sort((a, b) => this.sortKey(b) - this.sortKey(a));
         this.internshipEntries.set(entries);
+        this.revealResumeCards();
       },
-      error: () => this.internshipError.set(true),
+      error: (err) => {
+        console.error('Internship load failed:', err);
+        this.internshipError.set(true);
+      },
     });
   }
 
@@ -125,17 +133,31 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.internshipSubscription?.unsubscribe();
   }
 
-  private parseStartDate(date: string): number {
-    if (!date) {
+  private toEpoch(value: unknown): number {
+    if (!value) {
       return 0;
     }
-    const match = date.match(/^(\d{4})-?(\d{2})?/);
-    if (!match) {
-      return 0;
+    if (typeof value === 'string') {
+      const match = value.match(/^(\d{4})-?(\d{1,2})?/);
+      if (!match) {
+        return 0;
+      }
+      return new Date(Number(match[1]), (match[2] ? Number(match[2]) : 1) - 1, 1).getTime();
     }
-    const year = parseInt(match[1], 10);
-    const month = match[2] ? parseInt(match[2], 10) : 0;
-    return year * 100 + month;
+    const fallback = value as { toMillis?: () => number; seconds?: number };
+    if (typeof fallback.toMillis === 'function') {
+      return fallback.toMillis();
+    }
+    const ms = typeof fallback.seconds === 'number' ? fallback.seconds * 1000 : new Date(value as never).getTime();
+    return Number.isNaN(ms) ? 0 : ms;
+  }
+
+  private sortKey(entry: Education | Internship): number {
+    return (
+      this.toEpoch(entry.startDate) ||
+      this.toEpoch(entry.endDate) ||
+      this.toEpoch((entry as { createdAt?: unknown }).createdAt)
+    );
   }
 
   protected formatDateRange(startDate: string, endDate?: string): string {
@@ -146,6 +168,33 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       return `${startDate} - Present`;
     }
     return `${startDate} - ${endDate}`;
+  }
+
+  protected educationTitle(edu: Education): string {
+    if (edu.title) {
+      return edu.title;
+    }
+    if (edu.degree && edu.field) {
+      return `${edu.degree} in ${edu.field}`;
+    }
+    return edu.degree || edu.field || 'Education';
+  }
+
+  protected internshipTitle(exp: Internship): string {
+    return exp.position || exp.company || 'Internship';
+  }
+
+  private revealResumeCards(): void {
+    setTimeout(() => {
+      const cards = Array.from(
+        this.elementRef.nativeElement.querySelectorAll(
+          '#resume-section .resume-wrap.ftco-animate:not(.ftco-animated)'
+        )
+      ) as HTMLElement[];
+      cards.forEach((card, index) => {
+        setTimeout(() => card.classList.add('fadeInUp', 'ftco-animated'), index * 50);
+      });
+    }, 0);
   }
 
   private startTyping(): void {
