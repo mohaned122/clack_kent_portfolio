@@ -100,45 +100,41 @@
         </div>
     		<div class="row">
     			<div class="col-md-6">
-    				<div class="resume-wrap ftco-animate">
-    					<span class="date">2014-2015</span>
-    					<h2>Master Degree of Design</h2>
-    					<span class="position">Cambridge University</span>
-    					<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-    				</div>
-    				<div class="resume-wrap ftco-animate">
-    					<span class="date">2014-2015</span>
-    					<h2>Bachelor's Degree of C.A</h2>
-    					<span class="position">Cambridge University</span>
-    					<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-    				</div>
-    				<div class="resume-wrap ftco-animate">
-    					<span class="date">2014-2015</span>
-    					<h2>Diploma in Computer</h2>
-    					<span class="position">Cambridge University</span>
-    					<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-    				</div>
+            @if (educationError()) {
+              <p class="text-center">Unable to load education data.</p>
+            } @else {
+              @for (edu of educationEntries(); track edu.id) {
+    				    <div class="resume-wrap ftco-animate">
+    					    <span class="date">{{ formatDateRange(edu.startDate, edu.endDate) }}</span>
+    					    <h2>{{ edu.title }}</h2>
+    					    <span class="position">{{ edu.institution }}</span>
+                  @if (edu.description) {
+                    <p class="mt-4">{{ edu.description }}</p>
+                  }
+    				    </div>
+              } @empty {
+                <p class="text-center">No education entries yet.</p>
+              }
+            }
     			</div>
 
     			<div class="col-md-6">
-    				<div class="resume-wrap ftco-animate">
-    					<span class="date">2014-2015</span>
-    					<h2>Art &amp; Creative Director</h2>
-    					<span class="position">Cambridge University</span>
-    					<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-    				</div>
-    				<div class="resume-wrap ftco-animate">
-    					<span class="date">2014-2015</span>
-    					<h2>Wordpress Developer</h2>
-    					<span class="position">Cambridge University</span>
-    					<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-    				</div>
-    				<div class="resume-wrap ftco-animate">
-    					<span class="date">2017-2018</span>
-    					<h2>UI/UX Designer</h2>
-    					<span class="position">Cambridge University</span>
-    					<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-    				</div>
+            @if (internshipError()) {
+              <p class="text-center">Unable to load experience data.</p>
+            } @else {
+              @for (exp of internshipEntries(); track exp.id) {
+    				    <div class="resume-wrap ftco-animate">
+    					    <span class="date">{{ formatDateRange(exp.startDate, exp.endDate) }}</span>
+    					    <h2>{{ exp.position }}</h2>
+    					    <span class="position">{{ exp.company }}</span>
+                  @if (exp.description) {
+                    <p class="mt-4">{{ exp.description }}</p>
+                  }
+    				    </div>
+              } @empty {
+                <p class="text-center">No experience entries yet.</p>
+              }
+            }
     			</div>
     		</div>
     		<div class="row justify-content-center mt-5">

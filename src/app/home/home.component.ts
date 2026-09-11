@@ -1,11 +1,16 @@
 import { Component, AfterViewInit, OnDestroy, ElementRef, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CertCardComponent } from '../cert-card/cert-card.component';
 import { projects } from '../data/projects.data';
 import { articles } from '../data/articles.data';
 import { certificates } from '../data/certificates.data';
 import { ScrollService } from '../services/scroll.service';
 import { CvService } from '../services/cv.service';
+import { EducationService } from '../services/education.service';
+import { InternshipService } from '../services/internship.service';
+import { Education } from '../models/education.model';
+import { Internship } from '../models/internship.model';
 
 declare function clarkInit(): void;
 
@@ -26,6 +31,16 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly scrollService = inject(ScrollService);
   protected readonly cvService = inject(CvService);
+
+  protected readonly educationEntries = signal<Education[]>([]);
+  protected readonly internshipEntries = signal<Internship[]>([]);
+  protected readonly educationError = signal(false);
+  protected readonly internshipError = signal(false);
+
+  private readonly educationService = inject(EducationService);
+  private readonly internshipService = inject(InternshipService);
+  private educationSubscription: Subscription | null = null;
+  private internshipSubscription: Subscription | null = null;
 
   private readonly roleTitles = [
     'Software Engineer',
@@ -53,7 +68,22 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private destroyed = false;
   private skillsObserver: IntersectionObserver | null = null;
 
-  constructor(private readonly elementRef: ElementRef) {}
+  constructor(private readonly elementRef: ElementRef) {
+    this.educationSubscription = this.educationService.getAll().subscribe({
+      next: (entries) => {
+        entries.sort((a, b) => this.parseStartDate(b.startDate) - this.parseStartDate(a.startDate));
+        this.educationEntries.set(entries);
+      },
+      error: () => this.educationError.set(true),
+    });
+    this.internshipSubscription = this.internshipService.getAll().subscribe({
+      next: (entries) => {
+        entries.sort((a, b) => this.parseStartDate(b.startDate) - this.parseStartDate(a.startDate));
+        this.internshipEntries.set(entries);
+      },
+      error: () => this.internshipError.set(true),
+    });
+  }
 
   protected goToContact(): void {
     this.navigateTo('contact-section');
@@ -91,6 +121,31 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     if (this.skillsObserver !== null) {
       this.skillsObserver.disconnect();
     }
+    this.educationSubscription?.unsubscribe();
+    this.internshipSubscription?.unsubscribe();
+  }
+
+  private parseStartDate(date: string): number {
+    if (!date) {
+      return 0;
+    }
+    const match = date.match(/^(\d{4})-?(\d{2})?/);
+    if (!match) {
+      return 0;
+    }
+    const year = parseInt(match[1], 10);
+    const month = match[2] ? parseInt(match[2], 10) : 0;
+    return year * 100 + month;
+  }
+
+  protected formatDateRange(startDate: string, endDate?: string): string {
+    if (!startDate) {
+      return endDate ?? 'Present';
+    }
+    if (!endDate) {
+      return `${startDate} - Present`;
+    }
+    return `${startDate} - ${endDate}`;
   }
 
   private startTyping(): void {
