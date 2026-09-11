@@ -44,4 +44,4 @@ __screenshots__/
 Thumbs.db
 
 # Environment files
-/src/app/environment/
+/src/app/environment
