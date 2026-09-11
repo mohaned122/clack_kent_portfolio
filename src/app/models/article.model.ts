@@ -9,3 +9,13 @@ export interface Article {
   lockedUntil?: Date | null;
   createdAt: Date;
 }
+
+export interface ArticleComment {
+  id?: string;
+  articleId: string;
+  name: string;
+  email: string;
+  website?: string;
+  message: string;
+  createdAt: Date;
+}

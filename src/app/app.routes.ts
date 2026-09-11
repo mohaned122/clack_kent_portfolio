@@ -14,6 +14,10 @@ export const routes: Routes = [
   { path: 'projects/:id', component: ProjectDetail },
   { path: 'project/:id', component: ProjectDetail },
   { path: 'certifications', component: CertificationsComponent },
+  {
+    path: ':datePrefix/admin',
+    loadComponent: () => import('./admin/admin').then((m) => m.Admin),
+  },
   { path: 'index.html', redirectTo: '' },
   { path: 'single.html', redirectTo: 'blog' },
   { path: '**', redirectTo: '' }

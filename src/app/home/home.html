@@ -469,9 +469,22 @@
           </div>
         </div>
         <div class="row d-flex">
-          @for (blog of articles; track blog.id) {
-            <div class="col-md-4 d-flex ftco-animate">
-            	<div class="blog-entry justify-content-end">
+          @if (articlesLoading()) {
+            <div class="col-12 text-center ftco-animate ftco-animated">
+              <p class="mb-0">Loading blog posts...</p>
+            </div>
+          } @else if (articlesError()) {
+            <div class="col-12 text-center ftco-animate ftco-animated">
+              <p class="mb-0">Unable to load blog posts right now. Please try again later.</p>
+            </div>
+          } @else if (articles().length === 0) {
+            <div class="col-12 text-center ftco-animate ftco-animated">
+              <p class="mb-0">No blog posts yet.</p>
+            </div>
+          } @else {
+            @for (blog of articles(); track blog.id) {
+              <div class="col-md-4 d-flex ftco-animate">
+              	<div class="blog-entry justify-content-end">
                 <a [routerLink]="['/blog', blog.id]" class="block-20" [style.background-image]="'url(' + blog.image + ')'">
                 </a>
                 <div class="text mt-3 float-right d-block">
@@ -479,7 +492,7 @@
 	                	<p class="mb-0">
 	                		<span class="mr-2">{{ blog.date }}</span>
 	                		<a href="#" class="mr-2">Admin</a>
-	                		<a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
+	                		<a href="#" class="meta-chat"><span class="icon-chat"></span> {{ blogCommentCount(blog) }}</a>
 	                	</p>
 	                </div>
                   <h3 class="heading"><a [routerLink]="['/blog', blog.id]">{{ blog.title }}</a></h3>
@@ -487,6 +500,7 @@
                 </div>
               </div>
             </div>
+            }
           }
         </div>
         <div class="row justify-content-center mt-5">

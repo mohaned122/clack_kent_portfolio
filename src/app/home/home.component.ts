@@ -3,11 +3,11 @@ import { Router, RouterLink } from '@angular/router';
 import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CertCardComponent } from '../cert-card/cert-card.component';
-import { articles } from '../data/articles.data';
 import { ScrollService } from '../services/scroll.service';
 import { CvService } from '../services/cv.service';
 import { EducationService } from '../services/education.service';
 import { InternshipService } from '../services/internship.service';
+import { ArticleService } from '../services/article.service';
 import { ProjectService } from '../services/project.service';
 import { CertificateService } from '../services/certificate.service';
 import { ContactService } from '../services/contact.service';
@@ -17,6 +17,7 @@ import { Internship } from '../models/internship.model';
 import { Project } from '../models/project.model';
 import { Certificate } from '../models/certificate.model';
 import { ContactMessage } from '../models/contact.model';
+import { Article } from '../models/article.model';
 import { revealAnimated } from '../utils/reveal.util';
 
 declare function clarkInit(): void;
@@ -31,7 +32,11 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   protected readonly typedText = signal('');
 
-  protected readonly articles = articles;
+  protected readonly articles = signal<Article[]>([]);
+  protected readonly articlesLoading = signal(true);
+  protected readonly articlesError = signal(false);
+
+  protected readonly articleCommentCounts = signal<Record<string, number>>({});
 
   protected readonly homeCertificates = signal<Certificate[]>([]);
   protected readonly certificatesLoading = signal(true);
@@ -62,10 +67,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private readonly projectService = inject(ProjectService);
   private readonly certificateService = inject(CertificateService);
   private readonly contactService = inject(ContactService);
+  private readonly articleService = inject(ArticleService);
   private educationSubscription: Subscription | null = null;
   private internshipSubscription: Subscription | null = null;
   private projectSubscription: Subscription | null = null;
   private certificateSubscription: Subscription | null = null;
+  private articleSubscription: Subscription | null = null;
   private projectsRotationTimer: ReturnType<typeof setInterval> | null = null;
 
   private readonly roleTitles = [
@@ -146,6 +153,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         this.certificateError.set(true);
       },
     });
+    this.articleSubscription = this.articleService.getAll().subscribe({
+      next: (list) => {
+        this.articles.set(list.slice(0, 3));
+        this.articlesLoading.set(false);
+        this.subscribeArticleCommentCounts(list.slice(0, 3));
+        this.revealBlogCards();
+      },
+      error: (err) => {
+        console.error('Articles load failed:', err);
+        this.articlesLoading.set(false);
+        this.articlesError.set(true);
+      },
+    });
   }
 
   protected goToContact(): void {
@@ -222,6 +242,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.internshipSubscription?.unsubscribe();
     this.projectSubscription?.unsubscribe();
     this.certificateSubscription?.unsubscribe();
+    this.articleSubscription?.unsubscribe();
+    this.commentCountSubscriptions.forEach((s) => s.unsubscribe());
   }
 
   private toEpoch(value: unknown): number {
@@ -312,6 +334,32 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   private revealResumeCards(): void {
     revealAnimated('#resume-section .resume-wrap.ftco-animate');
+  }
+
+  private revealBlogCards(): void {
+    revealAnimated('#blog-section .blog-entry.ftco-animate');
+  }
+
+  protected blogCommentCount(blog: Article): number {
+    return this.articleCommentCounts()[blog.id ?? ''] ?? 0;
+  }
+
+  private commentCountSubscriptions: Subscription[] = [];
+
+  private subscribeArticleCommentCounts(list: Article[]): void {
+    this.commentCountSubscriptions.forEach((s) => s.unsubscribe());
+    this.commentCountSubscriptions = [];
+    for (const article of list) {
+      if (!article.id) continue;
+      this.commentCountSubscriptions.push(
+        this.articleService.getComments(article.id).subscribe({
+          next: (comments) => {
+            this.articleCommentCounts.update((map) => ({ ...map, [article.id!]: comments.length }));
+          },
+          error: () => undefined,
+        })
+      );
+    }
   }
 
   private startTyping(): void {

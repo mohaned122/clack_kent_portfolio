@@ -14,29 +14,43 @@
       <div class="container">
         <div class="row">
           <div class="col-12">
-            <div class="row">
-              @for (article of articles; track article.id) {
-                <div class="col-md-6 col-lg-4 d-flex ftco-animate">
-                  <div class="blog-entry justify-content-end">
-                    <a [routerLink]="['/blog', article.id]" class="block-20" [style.background-image]="'url(' + article.image + ')'">
-                    </a>
-                    <div class="text mt-3 float-right d-block">
-                      <div class="d-flex align-items-center mb-3 meta">
-                        <p class="mb-0">
-                          <span class="mr-2">{{ article.date }}</span>
-                          <a href="#" class="mr-2">Admin</a>
-                          <a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-                        </p>
+            @if (loading()) {
+              <div class="text-center ftco-animate ftco-animated">
+                <p class="mb-0">Loading blog posts...</p>
+              </div>
+            } @else if (error()) {
+              <div class="text-center ftco-animate ftco-animated">
+                <p class="mb-0">Unable to load blog posts right now. Please try again later.</p>
+              </div>
+            } @else if (articles().length === 0) {
+              <div class="text-center ftco-animate ftco-animated">
+                <p class="mb-0">No blog posts yet.</p>
+              </div>
+            } @else {
+              <div class="row">
+                @for (article of articles(); track article.id) {
+                  <div class="col-md-6 col-lg-4 d-flex ftco-animate">
+                    <div class="blog-entry justify-content-end">
+                      <a [routerLink]="['/blog', article.id]" class="block-20" [style.background-image]="'url(' + article.image + ')'">
+                      </a>
+                      <div class="text mt-3 float-right d-block">
+                        <div class="d-flex align-items-center mb-3 meta">
+                          <p class="mb-0">
+                            <span class="mr-2">{{ article.date }}</span>
+                            <a href="#" class="mr-2">Admin</a>
+                            <a href="#" class="meta-chat"><span class="icon-chat"></span> {{ commentCount(article) }}</a>
+                          </p>
+                        </div>
+                        <h3 class="heading"><a [routerLink]="['/blog', article.id]">{{ article.title }}</a></h3>
+                        <span class="text-uppercase font-weight-bold" style="color: #ffbd39; font-size: 13px;">{{ article.type }}</span>
+                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                        <p><a [routerLink]="['/blog', article.id]" class="btn-custom">Continue Reading <span class="icon-long-arrow-right"></span></a></p>
                       </div>
-                      <h3 class="heading"><a [routerLink]="['/blog', article.id]">{{ article.title }}</a></h3>
-                      <span class="text-uppercase font-weight-bold" style="color: #ffbd39; font-size: 13px;">{{ article.type }}</span>
-                      <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                      <p><a [routerLink]="['/blog', article.id]" class="btn-custom">Continue Reading <span class="icon-long-arrow-right"></span></a></p>
                     </div>
                   </div>
-                </div>
-              }
-            </div>
+                }
+              </div>
+            }
           </div>
         </div>
       </div>

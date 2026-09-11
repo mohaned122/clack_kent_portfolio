@@ -1,6 +1,9 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, inject, signal, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { articles } from '../data/articles.data';
+import { Subscription } from 'rxjs';
+import { ArticleService } from '../services/article.service';
+import { Article } from '../models/article.model';
+import { revealAnimated } from '../utils/reveal.util';
 
 declare function clarkInit(): void;
 
@@ -10,8 +13,16 @@ declare function clarkInit(): void;
   templateUrl: './blog-list.component.html',
   styleUrl: './blog-list.component.scss',
 })
-export class BlogListComponent implements AfterViewInit {
-  protected readonly articles = articles;
+export class BlogListComponent implements AfterViewInit, OnDestroy {
+  private readonly articleService = inject(ArticleService);
+
+  protected readonly articles = signal<Article[]>([]);
+  protected readonly commentCounts = signal<Record<string, number>>({});
+  protected readonly loading = signal(true);
+  protected readonly error = signal(false);
+
+  private subscription: Subscription | null = null;
+  private commentSubscriptions: Subscription[] = [];
 
   ngAfterViewInit(): void {
     if (typeof clarkInit === 'function') {
@@ -21,5 +32,47 @@ export class BlogListComponent implements AfterViewInit {
         // Legacy jQuery init must never block the page.
       }
     }
+    this.subscription = this.articleService.getAll().subscribe({
+      next: (list) => {
+        this.articles.set(list);
+        this.loading.set(false);
+        this.subscribeCommentCounts(list);
+        this.revealCards();
+      },
+      error: (err) => {
+        console.error('Articles load failed:', err);
+        this.loading.set(false);
+        this.error.set(true);
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+    this.commentSubscriptions.forEach((s) => s.unsubscribe());
+  }
+
+  protected commentCount(article: Article): number {
+    return this.commentCounts()[article.id ?? ''] ?? 0;
+  }
+
+  private subscribeCommentCounts(list: Article[]): void {
+    this.commentSubscriptions.forEach((s) => s.unsubscribe());
+    this.commentSubscriptions = [];
+    for (const article of list) {
+      if (!article.id) continue;
+      this.commentSubscriptions.push(
+        this.articleService.getComments(article.id).subscribe({
+          next: (comments) => {
+            this.commentCounts.update((map) => ({ ...map, [article.id!]: comments.length }));
+          },
+          error: () => undefined,
+        })
+      );
+    }
+  }
+
+  private revealCards(): void {
+    revealAnimated('app-blog-list .blog-entry.ftco-animate');
   }
 }

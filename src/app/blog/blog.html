@@ -14,7 +14,12 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 ftco-animate">
-            @if (article(); as article) {
+            @if (loading()) {
+              <h2 class="mb-3">Loading article...</h2>
+            } @else if (error() && article() === null) {
+              <h2 class="mb-3">Article not found</h2>
+              <p>The article you are looking for does not exist anymore.</p>
+            } @else if (article(); as article) {
               <span class="text-uppercase font-weight-bold" style="color: #a0f669; font-size: 13px; letter-spacing: 2px;">{{ article.type }}</span>
               <h2 class="mb-3 mt-2">{{ article.title }}</h2>
               <div class="meta mb-4">
@@ -28,9 +33,6 @@
                   </p>
                 }
               }
-            } @else {
-              <h2 class="mb-3">Article not found</h2>
-              <p>The article you are looking for does not exist anymore.</p>
             }
             <div class="tag-widget post-tag-container mb-5 mt-5">
               <div class="tagcloud">
@@ -53,111 +55,64 @@
 
 
             <div class="pt-5 mt-5">
-              <h3 class="mb-5">6 Comments</h3>
-              <ul class="comment-list">
-                <li class="comment">
-                  <div class="vcard bio">
-                    <img src="images/person_1.jpg" alt="Image placeholder">
-                  </div>
-                  <div class="comment-body">
-                    <h3>John Doe</h3>
-                    <div class="meta">June 20, 2019 at 2:21pm</div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                    <p><a href="#" class="reply">Reply</a></p>
-                  </div>
-                </li>
-
-                <li class="comment">
-                  <div class="vcard bio">
-                    <img src="images/person_1.jpg" alt="Image placeholder">
-                  </div>
-                  <div class="comment-body">
-                    <h3>John Doe</h3>
-                    <div class="meta">June 20, 2019 at 2:21pm</div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                    <p><a href="#" class="reply">Reply</a></p>
-                  </div>
-
-                  <ul class="children">
+              <h3 class="mb-5">{{ comments().length }} Comments</h3>
+              @if (commentsLoading()) {
+                <p>Loading comments...</p>
+              } @else if (commentsError()) {
+                <p>Unable to load comments right now.</p>
+              } @else if (comments().length === 0) {
+                <p>No comments yet. Be the first to comment!</p>
+              } @else {
+                <ul class="comment-list">
+                  @for (comment of comments(); track comment.id) {
                     <li class="comment">
                       <div class="vcard bio">
                         <img src="images/person_1.jpg" alt="Image placeholder">
                       </div>
                       <div class="comment-body">
-                        <h3>John Doe</h3>
-                        <div class="meta">June 20, 2019 at 2:21pm</div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
+                        <h3>{{ comment.name }}</h3>
+                        <div class="meta">{{ commentDate(comment) }}</div>
+                        <p>{{ comment.message }}</p>
                         <p><a href="#" class="reply">Reply</a></p>
                       </div>
-
-
-                      <ul class="children">
-                        <li class="comment">
-                          <div class="vcard bio">
-                            <img src="images/person_1.jpg" alt="Image placeholder">
-                          </div>
-                          <div class="comment-body">
-                            <h3>John Doe</h3>
-                            <div class="meta">June 20, 2019 at 2:21pm</div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                            <p><a href="#" class="reply">Reply</a></p>
-                          </div>
-
-                            <ul class="children">
-                              <li class="comment">
-                                <div class="vcard bio">
-                                  <img src="images/person_1.jpg" alt="Image placeholder">
-                                </div>
-                                <div class="comment-body">
-                                  <h3>John Doe</h3>
-                                  <div class="meta">June 20, 2019 at 2:21pm</div>
-                                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                  <p><a href="#" class="reply">Reply</a></p>
-                                </div>
-                              </li>
-                            </ul>
-                        </li>
-                      </ul>
                     </li>
-                  </ul>
-                </li>
-
-                <li class="comment">
-                  <div class="vcard bio">
-                    <img src="images/person_1.jpg" alt="Image placeholder">
-                  </div>
-                  <div class="comment-body">
-                    <h3>John Doe</h3>
-                    <div class="meta">June 20, 2019 at 2:21pm</div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                    <p><a href="#" class="reply">Reply</a></p>
-                  </div>
-                </li>
-              </ul>
+                  }
+                </ul>
+              }
               <!-- END comment-list -->
               
               <div class="comment-form-wrap pt-5">
                 <h3 class="mb-5">Leave a comment</h3>
-                <form action="#" class="p-5 bg-dark">
+                <form (ngSubmit)="submitComment()" class="p-5 bg-dark">
                   <div class="form-group">
                     <label for="name">Name *</label>
-                    <input type="text" class="form-control" id="name">
+                    <input type="text" class="form-control" id="name" name="name" [ngModel]="commentName()" (ngModelChange)="commentName.set($event)" required>
                   </div>
                   <div class="form-group">
                     <label for="email">Email *</label>
-                    <input type="email" class="form-control" id="email">
+                    <input type="email" class="form-control" id="email" name="email" [ngModel]="commentEmail()" (ngModelChange)="commentEmail.set($event)" required>
                   </div>
                   <div class="form-group">
                     <label for="website">Website</label>
-                    <input type="url" class="form-control" id="website">
+                    <input type="url" class="form-control" id="website" name="website" [ngModel]="commentWebsite()" (ngModelChange)="commentWebsite.set($event)">
                   </div>
 
                   <div class="form-group">
                     <label for="message">Message</label>
-                    <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
+                    <textarea name="message" id="message" cols="30" rows="10" class="form-control" [ngModel]="commentMessage()" (ngModelChange)="commentMessage.set($event)" required></textarea>
                   </div>
+                  @if (commentSubmitError()) {
+                    <div class="form-group">
+                      <p class="mb-0">There was a problem posting your comment. Please fill in all required fields and try again.</p>
+                    </div>
+                  }
+                  @if (commentSubmitted()) {
+                    <div class="form-group">
+                      <p class="mb-0" style="color: #a0f669;">Your comment has been posted successfully.</p>
+                    </div>
+                  }
                   <div class="form-group">
-                    <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
+                    <input type="submit" value="{{ commentSubmitting() ? 'Posting...' : 'Post Comment' }}" class="btn py-3 px-4 btn-primary" [disabled]="commentSubmitting()">
                   </div>
 
                 </form>
@@ -186,7 +141,7 @@
 
             <div class="sidebar-box ftco-animate">
               <h3 class="heading-sidebar">Recent Blog</h3>
-              @for (blog of articles; track blog.id) {
+              @for (blog of sidebarArticles(); track blog.id) {
                 <div class="block-21 mb-4 d-flex">
                   <a class="blog-img mr-4" [style.background-image]="'url(' + blog.image + ')'" [routerLink]="['/blog', blog.id]"></a>
                   <div class="text">

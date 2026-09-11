@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public content collections — anyone can read (the site reads without login)
+    match /education/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /certificates/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /internships/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /projects/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /articles/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    // Article comments — anyone can read/post, only admins can update/delete
+    match /articles/{articleId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if request.auth != null;
+    }
+    // Contact messages — anyone can submit, only admins can read/manage
+    match /messages/{document=**} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}
