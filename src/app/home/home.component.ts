@@ -3,7 +3,6 @@ import { Router, RouterLink } from '@angular/router';
 import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CertCardComponent } from '../cert-card/cert-card.component';
-import { WorkstationSceneComponent } from '../contact-scene/workstation-scene.component';
 import { articles } from '../data/articles.data';
 import { ScrollService } from '../services/scroll.service';
 import { CvService } from '../services/cv.service';
@@ -24,7 +23,7 @@ declare function clarkInit(): void;
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, CertCardComponent, FormsModule, WorkstationSceneComponent],
+  imports: [RouterLink, CertCardComponent, FormsModule],
   templateUrl: './home.html',
   styleUrls: ['./home.scss']
 })

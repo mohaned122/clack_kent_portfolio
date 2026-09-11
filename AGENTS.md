@@ -67,7 +67,6 @@ Call it from each subscription's `next()` after setting its signal. The `:not(.f
 - Vitest is configured, but **no `*.spec.ts` files exist** — `npm test` has nothing to run. Schematics generate everything with `skipTests: true`.
 - No lint or typecheck script is configured; use `ng build` to type-check.
 - Production build has budgets: initial bundle warning at 800kB, error at 1.5MB. Firebase + `@google/generative-ai` are bundled deps — watch bundle size.
-- The contact workstation scene (`src/app/contact-scene/`) uses pure CSS 3D transforms (perspective, rotateX/Y) with pointer drag. No external 3D library — keeps the initial bundle lean. `HostListener` on `window:pointermove/up/leave` tracks drag state; `requestAnimationFrame` loop damps rotation and auto-rotates at idle.
 - No e2e test framework is configured.
 
 ## Mandatory Agent Workflow
