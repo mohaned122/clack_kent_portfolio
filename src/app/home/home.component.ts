@@ -344,6 +344,20 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     return this.articleCommentCounts()[blog.id ?? ''] ?? 0;
   }
 
+  protected blogExcerpt(blog: Article): string {
+    const text = (blog.content || '').replace(/\s+/g, ' ').trim();
+    if (!text) {
+      return 'No preview available.';
+    }
+    const max = 100;
+    if (text.length <= max) {
+      return text;
+    }
+    const cut = text.slice(0, max);
+    const lastSpace = cut.lastIndexOf(' ');
+    return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut) + '…';
+  }
+
   private commentCountSubscriptions: Subscription[] = [];
 
   private subscribeArticleCommentCounts(list: Article[]): void {

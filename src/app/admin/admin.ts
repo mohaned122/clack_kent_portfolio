@@ -575,6 +575,14 @@ export class Admin implements OnInit, AfterViewInit, OnDestroy {
     this.expandedComments.set(this.expandedComments() === id ? null : id);
   }
 
+  commentCountFor(article: Article): number {
+    return this.articleCommentCounts()[article.id ?? ''] ?? 0;
+  }
+
+  articleCommentsFor(article: Article): ArticleComment[] {
+    return this.articleComments()[article.id ?? ''] ?? [];
+  }
+
   async deleteArticleComment(articleId: string, commentId: string) {
     await this.articleService.deleteComment(articleId, commentId);
   }

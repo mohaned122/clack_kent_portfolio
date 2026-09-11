@@ -496,7 +496,7 @@
 	                	</p>
 	                </div>
                   <h3 class="heading"><a [routerLink]="['/blog', blog.id]">{{ blog.title }}</a></h3>
-                  <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                  <p>{{ blogExcerpt(blog) }}</p>
                 </div>
               </div>
             </div>
