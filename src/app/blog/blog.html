@@ -20,7 +20,7 @@
               <h2 class="mb-3">Article not found</h2>
               <p>The article you are looking for does not exist anymore.</p>
             } @else if (article(); as article) {
-              <span class="text-uppercase font-weight-bold" style="color: #a0f669; font-size: 13px; letter-spacing: 2px;">{{ article.type }}</span>
+              <span class="text-uppercase font-weight-bold" style="color: #a0f669; font-size: 13px; letter-spacing: 2px;">{{ article.category || article.type }}</span>
               <h2 class="mb-3 mt-2">{{ article.title }}</h2>
               <div class="meta mb-4">
                 <span class="icon-calendar mr-2"></span>{{ article.date }}
@@ -45,11 +45,11 @@
             
             <div class="about-author d-flex p-4 bg-dark">
               <div class="bio mr-5">
-                <img src="images/person_1.jpg" alt="Image placeholder" class="img-fluid mb-4">
+                <img [src]="authorImage" alt="Jasmin Boot" class="img-fluid mb-4">
               </div>
               <div class="desc">
-                <h3>George Washington</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
+                <h3>Jasmine</h3>
+                <p>Hi, I'm Jasmin Boot. Sharing thoughts and opinions is what makes a blog come alive — your comment could spark a new idea, help a fellow reader, or start a great conversation. If this article resonated with you, learned something new, or even made you disagree, don't hold back. Let your voice be heard below!</p>
               </div>
             </div>
 
@@ -132,10 +132,11 @@
             <div class="sidebar-box ftco-animate">
             	<h3 class="heading-sidebar">Categories</h3>
               <ul class="categories">
-                <li><a href="#">Interior Design <span>(12)</span></a></li>
-                <li><a href="#">Exterior Design <span>(22)</span></a></li>
-                <li><a href="#">Industrial Design <span>(37)</span></a></li>
-                <li><a href="#">Landscape Design <span>(42)</span></a></li>
+                @for (cat of sidebarCategories(); track cat.name) {
+                  <li><a routerLink="/blog">{{ cat.name }} <span>({{ cat.count }})</span></a></li>
+                } @empty {
+                  <li><span>No categories yet.</span></li>
+                }
               </ul>
             </div>
 
@@ -170,8 +171,11 @@
             </div>
 
             <div class="sidebar-box ftco-animate">
-              <h3 class="heading-sidebar">Paragraph</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
+              <h3 class="heading-sidebar">Advice</h3>
+              <p>Every article has a different perspective, and your thoughts can make the conversation even more interesting. Whether
+              you agree, disagree, have a question, or simply want to share your own experience, your voice matters. Take a moment to
+              leave a comment and share what you think about this topic. Your ideas, feedback, and experiences can inspire others and
+              turn a simple article into a meaningful discussion.</p>
             </div>
           </div>
 

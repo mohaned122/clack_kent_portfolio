@@ -4,6 +4,7 @@ export interface Article {
   date: string;
   content: string;
   type: 'Article' | 'News';
+  category?: string;
   url?: string;
   image?: string;
   lockedUntil?: Date | null;

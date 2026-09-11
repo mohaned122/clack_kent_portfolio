@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, AfterViewInit } from '@angular/core';
+import { Component, inject, signal, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,10 +12,11 @@ import { InternshipService } from '../services/internship.service';
 import { Project } from '../models/project.model';
 import { ContactMessage } from '../models/contact.model';
 import { Certificate } from '../models/certificate.model';
-import { Article } from '../models/article.model';
+import { Article, ArticleComment } from '../models/article.model';
 import { Education } from '../models/education.model';
 import { Internship } from '../models/internship.model';
 import { AdminNavService } from '../services/admin-nav.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -23,7 +24,7 @@ import { AdminNavService } from '../services/admin-nav.service';
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
-export class Admin implements OnInit, AfterViewInit {
+export class Admin implements OnInit, AfterViewInit, OnDestroy {
   private authService = inject(AuthService);
   private projectService = inject(ProjectService);
   private contactService = inject(ContactService);
@@ -52,11 +53,16 @@ export class Admin implements OnInit, AfterViewInit {
   selectedMessage = signal<ContactMessage | null>(null);
   certs = signal<Certificate[]>([]);
   articles = signal<Article[]>([]);
+  articleComments = signal<Record<string, ArticleComment[]>>({});
+  articleCommentCounts = signal<Record<string, number>>({});
+  expandedComments = signal<string | null>(null);
+  private articleCommentSubscriptions: Subscription[] = [];
 
   articleTitle = signal('');
   articleDate = signal('');
   articleContent = signal('');
   articleType = signal<'Article' | 'News'>('Article');
+  articleCategory = signal('');
   articleUrl = signal('');
   articleImage = signal('');
   articleImageFile = signal<File | null>(null);
@@ -149,6 +155,11 @@ export class Admin implements OnInit, AfterViewInit {
   async logout() {
     await this.authService.logout();
     this.isLoggedIn.set(false);
+  }
+
+  ngOnDestroy() {
+    this.articleCommentSubscriptions.forEach((s) => s.unsubscribe());
+    this.articleCommentSubscriptions = [];
   }
 
   loadEducation() {
@@ -539,7 +550,33 @@ export class Admin implements OnInit, AfterViewInit {
   }
 
   loadArticles() {
-    this.articleService.getAll().subscribe((data) => this.articles.set(data));
+    this.articleService.getAll().subscribe((data) => {
+      this.articles.set(data);
+      this.articleComments.set({});
+      this.articleCommentCounts.set({});
+      this.articleCommentSubscriptions.forEach((s) => s.unsubscribe());
+      this.articleCommentSubscriptions = [];
+      for (const article of data) {
+        if (!article.id) continue;
+        this.articleCommentSubscriptions.push(
+          this.articleService.getComments(article.id).subscribe({
+            next: (comments) => {
+              this.articleComments.update((map) => ({ ...map, [article.id!]: comments }));
+              this.articleCommentCounts.update((map) => ({ ...map, [article.id!]: comments.length }));
+            },
+            error: () => undefined,
+          })
+        );
+      }
+    });
+  }
+
+  toggleArticleComments(id: string) {
+    this.expandedComments.set(this.expandedComments() === id ? null : id);
+  }
+
+  async deleteArticleComment(articleId: string, commentId: string) {
+    await this.articleService.deleteComment(articleId, commentId);
   }
 
   onArticleFileSelected(event: Event) {
@@ -559,6 +596,7 @@ export class Admin implements OnInit, AfterViewInit {
       type: this.articleType(),
       createdAt: new Date(),
     };
+    if (this.articleCategory()) (article as any).category = this.articleCategory();
     if (imageUrl) (article as any).image = imageUrl;
     if (this.articleUrl()) (article as any).url = this.articleUrl();
     if (this.articleLockedUntil()) (article as any).lockedUntil = new Date(this.articleLockedUntil());
@@ -574,6 +612,7 @@ export class Admin implements OnInit, AfterViewInit {
     this.articleDate.set('');
     this.articleContent.set('');
     this.articleType.set('Article');
+    this.articleCategory.set('');
     this.articleUrl.set('');
     this.articleImage.set('');
     this.articleImageFile.set(null);
@@ -587,6 +626,7 @@ export class Admin implements OnInit, AfterViewInit {
     this.articleDate.set(a.date);
     this.articleContent.set(a.content);
     this.articleType.set(a.type);
+    this.articleCategory.set(a.category || '');
     this.articleUrl.set(a.url || '');
     this.articleImage.set(a.image || '');
     this.articleLockedUntil.set(a.lockedUntil ? new Date(a.lockedUntil).toISOString().slice(0, 16) : '');
@@ -598,6 +638,7 @@ export class Admin implements OnInit, AfterViewInit {
     this.articleDate.set('');
     this.articleContent.set('');
     this.articleType.set('Article');
+    this.articleCategory.set('');
     this.articleUrl.set('');
     this.articleImage.set('');
     this.articleImageFile.set(null);

@@ -28,6 +28,34 @@ export class BlogComponent implements AfterViewInit, OnDestroy {
 
   protected readonly sidebarArticles = signal<Article[]>([]);
 
+  protected readonly authorImage = (() => {
+    const options = [
+      'images/person_1.jpg',
+      'images/person_2.jpg',
+      'images/person_3.jpg',
+      'images/person_4.jpg',
+      'images/staff-1.jpg',
+      'images/staff-2.jpg',
+      'images/staff-3.jpg',
+      'images/staff-4.jpg',
+    ];
+    return options[Math.floor(Math.random() * options.length)];
+  })();
+
+  protected readonly sidebarCategories = computed(() => {
+    const counts = new Map<string, number>();
+    for (const a of this.sidebarCategoriesSource()) {
+      const cat = a.category?.trim() || a.type;
+      if (cat) counts.set(cat, (counts.get(cat) ?? 0) + 1);
+    }
+    return Array.from(counts.entries())
+      .sort((x, y) => y[1] - x[1])
+      .map(([name, count]) => ({ name, count }));
+  });
+
+  private readonly allArticles = signal<Article[]>([]);
+  protected readonly sidebarCategoriesSource = computed(() => this.allArticles().filter((a) => a.id !== this.currentArticleId));
+
   protected readonly commentName = signal('');
   protected readonly commentEmail = signal('');
   protected readonly commentWebsite = signal('');
@@ -67,6 +95,7 @@ export class BlogComponent implements AfterViewInit, OnDestroy {
     }
     this.sidebarSubscription = this.articleService.getAll().subscribe({
       next: (list) => {
+        this.allArticles.set(list);
         const others = list
           .filter((a) => a.id !== this.currentArticleId)
           .slice(0, 3);

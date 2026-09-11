@@ -338,6 +338,12 @@
               </select>
             </div>
             <input
+              placeholder="Category (e.g. Interior Design)"
+              [ngModel]="articleCategory()"
+              (ngModelChange)="articleCategory.set($event)"
+              class="bg-[var(--bg-hover)] text-[var(--text-primary)] rounded-lg px-4 py-2 border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <input
               placeholder="URL"
               [ngModel]="articleUrl()"
               (ngModelChange)="articleUrl.set($event)"
@@ -382,6 +388,7 @@
                 <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Title</th>
                 <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Type</th>
                 <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Date</th>
+                <th class="text-left px-4 py-3 text-sm text-[var(--text-muted)]">Comments</th>
                 <th class="text-right px-4 py-3 text-sm text-[var(--text-muted)]">Actions</th>
               </tr>
             </thead>
@@ -391,14 +398,38 @@
                   <td class="px-4 py-3 text-[var(--text-primary)]">{{ a.title }}</td>
                   <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs" [class.bg-yellow-500/10]="a.type==='News'" [class.text-yellow-400]="a.type==='News'" [class.bg-blue-500/10]="a.type==='Article'" [class.text-blue-400]="a.type==='Article'">{{ a.type }}</span></td>
                   <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ a.date }}</td>
+                  <td class="px-4 py-3 text-[var(--text-muted)] text-sm">{{ articleCommentCounts()[a.id ?? ''] ?? 0 }}</td>
                   <td class="px-4 py-3 text-right">
+                    <button (click)="toggleArticleComments(a.id!)" class="text-emerald-400 hover:text-emerald-300 mr-3 text-sm">{{ expandedComments() === a.id ? 'Hide' : 'Comments' }}</button>
                     <button (click)="editArticle(a)" class="text-blue-400 hover:text-blue-300 mr-3 text-sm">Edit</button>
                     <button (click)="deleteArticle(a.id!)" class="text-red-400 hover:text-red-300 text-sm">Delete</button>
                   </td>
                 </tr>
+                @if (expandedComments() === a.id) {
+                  <tr class="border-t border-[var(--border)] bg-[var(--bg-hover)]">
+                    <td colspan="5" class="px-4 py-4">
+                      @if ((articleComments()[a.id ?? ''] ?? []).length === 0) {
+                        <p class="text-[var(--text-muted)] text-sm">No comments yet for this article.</p>
+                      } @else {
+                        <div class="space-y-3">
+                          @for (c of articleComments()[a.id ?? ''] ?? []; track c.id) {
+                            <div class="flex justify-between items-start gap-4 bg-[var(--bg-card)] rounded-lg p-4 border border-[var(--border)]">
+                              <div>
+                                <p class="text-sm font-semibold text-[var(--text-primary)]">{{ c.name }} <span class="text-[var(--text-muted)] font-normal">@if (c.email) { &lt;{{ c.email }}&gt; }</span></p>
+                                <p class="text-xs text-[var(--text-muted)]">{{ formatDate(c.createdAt) }}</p>
+                                <p class="text-sm text-[var(--text-secondary)] mt-1 whitespace-pre-wrap">{{ c.message }}</p>
+                              </div>
+                              <button (click)="deleteArticleComment(a.id!, c.id!)" class="text-red-400 hover:text-red-300 text-sm shrink-0">Delete</button>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </td>
+                  </tr>
+                }
               } @empty {
                 <tr>
-                  <td colspan="4" class="px-4 py-8 text-center text-[var(--text-muted)]">No articles yet.</td>
+                  <td colspan="5" class="px-4 py-8 text-center text-[var(--text-muted)]">No articles yet.</td>
                 </tr>
               }
             </tbody>
