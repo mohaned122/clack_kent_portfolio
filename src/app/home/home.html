@@ -427,9 +427,23 @@
 				</div>
 			</div>
 			<div class="row">
-				@for (cert of certificates; track cert.id) {
-					<div class="col-md-6 ftco-animate">
-						<app-cert-card [certificate]="cert" />
+				@if (certificatesLoading()) {
+					<div class="col-12 text-center ftco-animate">
+						<p class="mb-3">Loading certifications…</p>
+					</div>
+				} @else if (certificateError()) {
+					<div class="col-12 text-center ftco-animate">
+						<p class="mb-3">Unable to load certifications.</p>
+					</div>
+				} @else if (homeCertificates().length > 0) {
+					@for (cert of homeCertificates(); track cert.id) {
+						<div class="col-md-6 ftco-animate">
+							<app-cert-card [certificate]="cert" />
+						</div>
+					}
+				} @else {
+					<div class="col-12 text-center ftco-animate">
+						<p class="mb-3">No certifications yet.</p>
 					</div>
 				}
 			</div>
@@ -585,28 +599,59 @@
 
         <div class="row no-gutters block-9">
           <div class="col-md-6 order-md-last d-flex">
-            <form action="#" class="bg-light p-4 p-md-5 contact-form">
+            <form class="bg-light p-4 p-md-5 contact-form" #contactForm="ngForm" (ngSubmit)="sendContact(contactForm)">
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Your Name">
+                <input type="text" name="name" ngModel #name="ngModel" required minlength="2"
+                  class="form-control" placeholder="Your Name"
+                  [class.is-invalid]="name.invalid && (name.dirty || contactSubmitted())">
+                @if (name.invalid && (name.dirty || contactSubmitted())) {
+                  <div class="invalid-feedback">Please enter your name.</div>
+                }
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Your Email">
+                <input type="email" name="email" ngModel #email="ngModel" required email
+                  class="form-control" placeholder="Your Email"
+                  [class.is-invalid]="email.invalid && (email.dirty || contactSubmitted())">
+                @if (email.invalid && (email.dirty || contactSubmitted())) {
+                  <div class="invalid-feedback">Please enter a valid email address.</div>
+                }
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Subject">
+                <input type="text" name="subject" ngModel #subject="ngModel" required
+                  class="form-control" placeholder="Subject"
+                  [class.is-invalid]="subject.invalid && (subject.dirty || contactSubmitted())">
+                @if (subject.invalid && (subject.dirty || contactSubmitted())) {
+                  <div class="invalid-feedback">Please enter a subject.</div>
+                }
               </div>
               <div class="form-group">
-                <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
+                <textarea name="message" ngModel #message="ngModel" required minlength="10" cols="30" rows="7"
+                  class="form-control" placeholder="Message"
+                  [class.is-invalid]="message.invalid && (message.dirty || contactSubmitted())"></textarea>
+                @if (message.invalid && (message.dirty || contactSubmitted())) {
+                  <div class="invalid-feedback">Please enter a message of at least 10 characters.</div>
+                }
               </div>
+              @if (contactSent()) {
+                <div class="contact-form__notice contact-form__notice--success">
+                  Your message has been sent successfully. I will get back to you right away!
+                </div>
+              } @else if (contactError()) {
+                <div class="contact-form__notice contact-form__notice--error">
+                  Something went wrong while sending your message. Please try again.
+                </div>
+              }
               <div class="form-group">
-                <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
+                <button type="submit" class="btn btn-primary py-3 px-5"
+                  [disabled]="contactSending()">
+                  {{ contactSending() ? 'Sending…' : 'Send Message' }}
+                </button>
               </div>
             </form>
-          
           </div>
 
           <div class="col-md-6 d-flex">
-          	<div class="img" style="background-image: url(images/about.jpg);"></div>
+            <app-workstation-scene class="img"></app-workstation-scene>
           </div>
         </div>
       </div>

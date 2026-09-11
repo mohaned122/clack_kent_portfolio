@@ -56,6 +56,9 @@ revealAnimated('#resume-section .resume-wrap.ftco-animate');
 // after the projects list lands / every 30s rotation, and after filter changes
 revealAnimated('#projects-section .project.ftco-animate');
 revealAnimated('#all-projects-section .project.ftco-animate');
+// after the certifications list lands (note the section's original typo id)
+revealAnimated('#cetificates-section .ftco-animate');
+revealAnimated('#all-certifications-section .ftco-animate');
 ```
 
 Call it from each subscription's `next()` after setting its signal. The `:not(.ftco-animated)` guard makes it idempotent, and the stagger (`index * 50`) mirrors the site's existing reveal pattern. Do NOT re-run `clarkInit()` to fix this — it re-initializes carousels/counters and double-binds waypoints. Use this same approach for any future dynamically-added `ftco-animate` content (Firestore lists, dashboards, etc.).
@@ -64,6 +67,7 @@ Call it from each subscription's `next()` after setting its signal. The `:not(.f
 - Vitest is configured, but **no `*.spec.ts` files exist** — `npm test` has nothing to run. Schematics generate everything with `skipTests: true`.
 - No lint or typecheck script is configured; use `ng build` to type-check.
 - Production build has budgets: initial bundle warning at 800kB, error at 1.5MB. Firebase + `@google/generative-ai` are bundled deps — watch bundle size.
+- The contact workstation scene (`src/app/contact-scene/`) uses pure CSS 3D transforms (perspective, rotateX/Y) with pointer drag. No external 3D library — keeps the initial bundle lean. `HostListener` on `window:pointermove/up/leave` tracks drag state; `requestAnimationFrame` loop damps rotation and auto-rotates at idle.
 - No e2e test framework is configured.
 
 ## Mandatory Agent Workflow

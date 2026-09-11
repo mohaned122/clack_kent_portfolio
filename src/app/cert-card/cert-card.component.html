@@ -12,7 +12,7 @@
     <div class="cert-card__face cert-card__face--front">
       <div
         class="cert-card__image"
-        [style.background-image]="'url(' + certificate().image + ')'"
+        [style.background-image]="certImage()"
         role="img"
         [attr.aria-label]="certificate().title"
       ></div>

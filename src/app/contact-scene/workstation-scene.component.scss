@@ -1,0 +1,219 @@
+:host {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: pan-y;
+  perspective: 1100px;
+  overflow: hidden;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.scene__stage {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  width: 340px;
+  height: 220px;
+  margin-left: -170px;
+  margin-top: -110px;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, -18deg)) rotateY(var(--ry, -30deg));
+}
+
+/* --- desk --- */
+.desk {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.desk__top {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 40px;
+  height: 26px;
+  background: linear-gradient(#2f2f3a, #26262f);
+  transform: translateZ(0) rotateX(0deg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.desk__leg {
+  position: absolute;
+  bottom: 0;
+  width: 14px;
+  height: 40px;
+  background: linear-gradient(#23232c, #1a1a22);
+
+  &--1 {
+    left: 14px;
+  }
+  &--2 {
+    right: 14px;
+  }
+  &--3 {
+    left: 14px;
+    transform: translateZ(160px);
+  }
+  &--4 {
+    right: 14px;
+    transform: translateZ(160px);
+  }
+}
+
+/* --- monitor --- */
+.monitor {
+  position: absolute;
+  left: 50%;
+  bottom: 66px;
+  width: 150px;
+  height: 110px;
+  margin-left: -75px;
+  transform-style: preserve-3d;
+}
+
+.monitor__stand-1 {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 20px;
+  height: 14px;
+  margin-left: -10px;
+  background: linear-gradient(#14141e, #101018);
+}
+
+.monitor__stand-2 {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  width: 6px;
+  height: 40px;
+  margin-left: -3px;
+  background: linear-gradient(#14141e, #101018);
+}
+
+.monitor__screen {
+  position: absolute;
+  left: 0;
+  bottom: 54px;
+  width: 150px;
+  height: 92px;
+  background: linear-gradient(135deg, #0e0e15, #14141c);
+  border: 6px solid #05050a;
+  border-radius: 6px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+.monitor__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(255, 189, 57, 0.35), rgba(10, 10, 14, 0.9) 70%);
+  animation: glow 4s ease-in-out infinite alternate;
+}
+
+/* --- keyboard / mouse --- */
+.keyboard {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  width: 120px;
+  height: 38px;
+  margin-left: -60px;
+  background: linear-gradient(#1c1c26, #15151f);
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    background-image: linear-gradient(#0f0f17 2px, transparent 2px),
+      linear-gradient(90deg, #0f0f17 2px, transparent 2px);
+    background-size: 16px 16px;
+  }
+}
+
+.mouse {
+  position: absolute;
+  right: 40px;
+  bottom: 26px;
+  width: 22px;
+  height: 30px;
+  background: linear-gradient(#1c1c26, #14141e);
+  border-radius: 55% 55% 50% 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* --- laptop --- */
+.laptop {
+  position: absolute;
+  right: 20px;
+  bottom: 40px;
+  width: 96px;
+  height: 62px;
+  transform-style: preserve-3d;
+}
+
+.laptop__base {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 96px;
+  height: 8px;
+  background: linear-gradient(#1a1a24, #12121a);
+  border-radius: 3px;
+}
+
+.laptop__screen {
+  position: absolute;
+  left: 4px;
+  bottom: 8px;
+  width: 88px;
+  height: 56px;
+  background: linear-gradient(135deg, #14141c, #1a1a24);
+  border: 4px solid #0a0a10;
+  border-radius: 3px 3px 0 0;
+  transform: rotateX(-38deg);
+  transform-origin: bottom center;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(160, 246, 105, 0.22), rgba(8, 12, 8, 0.9) 70%);
+  }
+}
+
+@keyframes glow {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 767.98px) {
+  :host {
+    height: 500px;
+    min-height: 500px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .monitor__glow {
+    animation: none;
+  }
+}

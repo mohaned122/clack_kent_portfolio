@@ -1,0 +1,32 @@
+<div
+  class="scene"
+  role="img"
+  aria-label="Interactive 3D workstation scene - drag to rotate"
+  (pointerdown)="dragStart($event)"
+>
+  <div class="scene__stage" [style.--rx]="rx() + 'deg'" [style.--ry]="ry() + 'deg'">
+    <div class="desk">
+      <div class="desk__top"></div>
+      <div class="desk__leg desk__leg--1"></div>
+      <div class="desk__leg desk__leg--2"></div>
+      <div class="desk__leg desk__leg--3"></div>
+      <div class="desk__leg desk__leg--4"></div>
+    </div>
+
+    <div class="monitor">
+      <div class="monitor__stand-1"></div>
+      <div class="monitor__stand-2"></div>
+      <div class="monitor__screen">
+        <div class="monitor__glow"></div>
+      </div>
+    </div>
+
+    <div class="keyboard"></div>
+    <div class="mouse"></div>
+
+    <div class="laptop">
+      <div class="laptop__base"></div>
+      <div class="laptop__screen"></div>
+    </div>
+  </div>
+</div>

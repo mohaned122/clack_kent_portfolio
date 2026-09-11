@@ -1,25 +1,30 @@
 import { Component, AfterViewInit, OnDestroy, ElementRef, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CertCardComponent } from '../cert-card/cert-card.component';
+import { WorkstationSceneComponent } from '../contact-scene/workstation-scene.component';
 import { articles } from '../data/articles.data';
-import { certificates } from '../data/certificates.data';
 import { ScrollService } from '../services/scroll.service';
 import { CvService } from '../services/cv.service';
 import { EducationService } from '../services/education.service';
 import { InternshipService } from '../services/internship.service';
 import { ProjectService } from '../services/project.service';
+import { CertificateService } from '../services/certificate.service';
+import { ContactService } from '../services/contact.service';
 import { ImageFallbackService } from '../services/image-fallback.service';
 import { Education } from '../models/education.model';
 import { Internship } from '../models/internship.model';
 import { Project } from '../models/project.model';
+import { Certificate } from '../models/certificate.model';
+import { ContactMessage } from '../models/contact.model';
 import { revealAnimated } from '../utils/reveal.util';
 
 declare function clarkInit(): void;
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, CertCardComponent],
+  imports: [RouterLink, CertCardComponent, FormsModule, WorkstationSceneComponent],
   templateUrl: './home.html',
   styleUrls: ['./home.scss']
 })
@@ -28,7 +33,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   protected readonly typedText = signal('');
 
   protected readonly articles = articles;
-  protected readonly certificates = certificates;
+
+  protected readonly homeCertificates = signal<Certificate[]>([]);
+  protected readonly certificatesLoading = signal(true);
+  protected readonly certificateError = signal(false);
+
+  protected readonly contactSending = signal(false);
+  protected readonly contactSent = signal(false);
+  protected readonly contactError = signal(false);
+  protected readonly contactSubmitted = signal(false);
 
   protected readonly allProjects = signal<Project[]>([]);
   protected readonly homeProjects = signal<Project[]>([]);
@@ -48,9 +61,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private readonly educationService = inject(EducationService);
   private readonly internshipService = inject(InternshipService);
   private readonly projectService = inject(ProjectService);
+  private readonly certificateService = inject(CertificateService);
+  private readonly contactService = inject(ContactService);
   private educationSubscription: Subscription | null = null;
   private internshipSubscription: Subscription | null = null;
   private projectSubscription: Subscription | null = null;
+  private certificateSubscription: Subscription | null = null;
   private projectsRotationTimer: ReturnType<typeof setInterval> | null = null;
 
   private readonly roleTitles = [
@@ -118,10 +134,54 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         this.projectError.set(true);
       },
     });
+    this.certificateSubscription = this.certificateService.getAll().subscribe({
+      next: (list) => {
+        const sorted = [...list].sort((a, b) => this.certDate(b) - this.certDate(a));
+        this.homeCertificates.set(sorted.slice(0, 6));
+        this.certificatesLoading.set(false);
+        this.revealCertificates();
+      },
+      error: (err) => {
+        console.error('Certificates load failed:', err);
+        this.certificatesLoading.set(false);
+        this.certificateError.set(true);
+      },
+    });
   }
 
   protected goToContact(): void {
     this.navigateTo('contact-section');
+  }
+
+  protected sendContact(form: NgForm): void {
+    this.contactSubmitted.set(true);
+    if (form.invalid || this.contactSending()) {
+      return;
+    }
+    this.contactSending.set(true);
+    this.contactError.set(false);
+
+    const message: ContactMessage = {
+      name: form.value.name,
+      email: form.value.email,
+      subject: form.value.subject,
+      message: form.value.message,
+      createdAt: new Date(),
+    };
+
+    this.contactService.sendMessage(message).then(
+      () => {
+        this.contactSending.set(false);
+        this.contactSent.set(true);
+        this.contactSubmitted.set(false);
+        form.resetForm();
+      },
+      (err) => {
+        console.error('Contact message failed:', err);
+        this.contactSending.set(false);
+        this.contactError.set(true);
+      }
+    );
   }
 
   protected scrollToProjects(): void {
@@ -162,6 +222,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.educationSubscription?.unsubscribe();
     this.internshipSubscription?.unsubscribe();
     this.projectSubscription?.unsubscribe();
+    this.certificateSubscription?.unsubscribe();
   }
 
   private toEpoch(value: unknown): number {
@@ -229,6 +290,25 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   private revealProjects(): void {
     revealAnimated('#projects-section .ftco-animate');
+  }
+
+  private revealCertificates(): void {
+    revealAnimated('#cetificates-section .ftco-animate');
+  }
+
+  private certDate(cert: Certificate): number {
+    return this.toEpoch(cert.createdAt) || this.parseDateText(cert.date);
+  }
+
+  private parseDateText(value?: string): number {
+    if (!value) {
+      return 0;
+    }
+    const years = value.match(/\d{4}/g);
+    if (!years) {
+      return 0;
+    }
+    return new Date(Number(years[years.length - 1]), 5, 30).getTime();
   }
 
   private revealResumeCards(): void {

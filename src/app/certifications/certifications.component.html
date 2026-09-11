@@ -21,7 +21,7 @@
           >
             All Certifications
           </button>
-          @for (year of years; track year) {
+          @for (year of years(); track year) {
             <button
               type="button"
               class="sub-navbar__link"
@@ -35,7 +35,7 @@
       </div>
     </nav>
 
-    <section class="ftco-section">
+    <section class="ftco-section" id="all-certifications-section">
       <div class="container">
         <div class="row justify-content-center mb-4">
           <div class="col-md-10 heading-section text-center ftco-animate">
@@ -46,19 +46,33 @@
             <p>Proof that curiosity never stops, and every new skill begins with the courage to learn</p>
           </div>
         </div>
-        <div class="row">
-          @for (cert of filtered(); track cert.id) {
-            <div class="col-md-6 col-lg-4">
-              <app-cert-card [certificate]="cert" />
-            </div>
-          } @empty {
+        @if (loading()) {
+          <div class="row">
             <div class="col-12 text-center ftco-animate">
-              <p class="mb-3">No certifications found for this period.</p>
-              <button type="button" class="btn btn-primary py-3 px-4" (click)="setYear('all')">
-                Show all certifications
-              </button>
+              <p class="mb-3">Loading certifications…</p>
             </div>
-          }
-        </div>
+          </div>
+        } @else if (error()) {
+          <div class="row">
+            <div class="col-12 text-center ftco-animate">
+              <p class="mb-3">Unable to load certifications.</p>
+            </div>
+          </div>
+        } @else {
+          <div class="row">
+            @for (cert of filtered(); track cert.id) {
+              <div class="col-md-6 col-lg-4">
+                <app-cert-card [certificate]="cert" />
+              </div>
+            } @empty {
+              <div class="col-12 text-center ftco-animate">
+                <p class="mb-3">No certifications found for this period.</p>
+                <button type="button" class="btn btn-primary py-3 px-4" (click)="setYear('all')">
+                  Show all certifications
+                </button>
+              </div>
+            }
+          </div>
+        }
       </div>
     </section>
