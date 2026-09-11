@@ -1,0 +1,23 @@
+.btn-custom {
+  color: #000000;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: #ffbd39;
+  padding: 10px 18px;
+  border-radius: 4px;
+  display: inline-block;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  &:hover,
+  &:focus {
+    color: #000000;
+    background: #a0f669;
+  }
+
+  .icon-long-arrow-right {
+    margin-left: 4px;
+  }
+}

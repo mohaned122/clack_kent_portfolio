@@ -1,0 +1,64 @@
+<section class="hero-wrap js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+          <div class="col-md-12 ftco-animate pb-5 mb-3 text-center">
+            <h1 class="mb-3 bread">Certifications</h1>
+            <p class="breadcrumbs"><span class="mr-2"><a routerLink="/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>All Certifications <i class="ion-ios-arrow-forward"></i></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="sub-navbar" aria-label="Certifications filter">
+      <div class="container">
+        <div class="sub-navbar__links">
+          <button
+            type="button"
+            class="sub-navbar__link"
+            [class.is-active]="activeYear() === 'all'"
+            (click)="setYear('all')"
+          >
+            All Certifications
+          </button>
+          @for (year of years; track year) {
+            <button
+              type="button"
+              class="sub-navbar__link"
+              [class.is-active]="activeYear() === year"
+              (click)="setYear(year)"
+            >
+              {{ year }}
+            </button>
+          }
+        </div>
+      </div>
+    </nav>
+
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center mb-4">
+          <div class="col-md-10 heading-section text-center ftco-animate">
+            <h1 class="big big-2">Certifications</h1>
+            <h2 class="mb-4">
+              {{ activeYear() === 'all' ? 'All Certifications' : 'Certifications · ' + activeYear() }}
+            </h2>
+            <p>Proof that curiosity never stops, and every new skill begins with the courage to learn</p>
+          </div>
+        </div>
+        <div class="row">
+          @for (cert of filtered(); track cert.id) {
+            <div class="col-md-6 col-lg-4">
+              <app-cert-card [certificate]="cert" />
+            </div>
+          } @empty {
+            <div class="col-12 text-center ftco-animate">
+              <p class="mb-3">No certifications found for this period.</p>
+              <button type="button" class="btn btn-primary py-3 px-4" (click)="setYear('all')">
+                Show all certifications
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </section>

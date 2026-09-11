@@ -1,15 +1,25 @@
 import { Component, AfterViewInit, OnDestroy, ElementRef, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { CertCardComponent } from '../cert-card/cert-card.component';
+import { projects } from '../data/projects.data';
+import { articles } from '../data/articles.data';
+import { certificates } from '../data/certificates.data';
 
 declare function clarkInit(): void;
 
 @Component({
   selector: 'app-home',
+  imports: [RouterLink, CertCardComponent],
   templateUrl: './home.html',
   styleUrls: ['./home.scss']
 })
 export class HomeComponent implements AfterViewInit, OnDestroy {
 
   protected readonly typedText = signal('');
+
+  protected readonly projects = projects;
+  protected readonly articles = articles;
+  protected readonly certificates = certificates;
 
   private readonly roleTitles = [
     'Software Engineer',

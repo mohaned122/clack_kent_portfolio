@@ -12,17 +12,65 @@
 
     <section class="ftco-section">
       <div class="container">
+        <div class="row justify-content-between align-items-center mb-4 filters-bar">
+          <div class="col-md-4 col-lg-3">
+            <input
+              type="text"
+              class="form-control filters-bar__search"
+              placeholder="Search projects…"
+              [value]="searchTerm()"
+              (input)="setSearch($any($event.target).value)"
+            />
+          </div>
+          <div class="col-md-4 col-lg-3">
+            <select
+              class="form-control filters-bar__select"
+              aria-label="Filter by year"
+              [value]="selectedYear()"
+              (change)="setYear($any($event.target).value)"
+            >
+              <option value="all">All years</option>
+              @for (year of years; track year) {
+                <option [value]="year">{{ year }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-4 col-lg-3">
+            <select
+              class="form-control filters-bar__select"
+              aria-label="Filter by technology"
+              [value]="selectedTech()"
+              (change)="setTech($any($event.target).value)"
+            >
+              <option value="all">All technologies</option>
+              @for (tech of technologies; track tech) {
+                <option [value]="tech">{{ tech }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-12 col-lg-2 text-md-left text-lg-right mt-2 mt-lg-0">
+            <button type="button" class="filters-bar__reset" (click)="resetFilters()">Reset</button>
+          </div>
+        </div>
+
         <div class="row">
-          @for (project of projects; track project.id) {
+          @for (project of filteredProjects(); track project.id) {
             <div class="col-md-4">
               <div class="project img ftco-animate d-flex justify-content-center align-items-center"
                 [style.background-image]="'url(' + project.image + ')'">
                 <div class="overlay"></div>
                 <div class="text text-center p-4">
-                  <h3><a [routerLink]="['/projects', project.id]">{{ project.title }}</a></h3>
-                  <span>{{ project.category }}</span>
+                  <h3><a [routerLink]="['/project', project.id]">{{ project.title }}</a></h3>
+                  <span>{{ project.category }} · {{ project.createdAt.getFullYear() }}</span>
                 </div>
               </div>
+            </div>
+          } @empty {
+            <div class="col-12 text-center ftco-animate">
+              <p class="mb-3">No projects match your filters.</p>
+              <button type="button" class="btn btn-primary py-3 px-4" (click)="resetFilters()">
+                Reset filters
+              </button>
             </div>
           }
         </div>

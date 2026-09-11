@@ -15,15 +15,22 @@
 	          <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span>Projects</span></a>
 	            <div class="dropdown-menu">
-	              <a class="dropdown-item" routerLink="/projects/1">Project</a>
 	              <a class="dropdown-item" routerLink="/projects">All Projects</a>
+	              <a class="dropdown-item" routerLink="/project/1">Featured Project</a>
 	            </div>
 	          </li>
 	          <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span>Blog</span></a>
 	            <div class="dropdown-menu">
-	              <a class="dropdown-item" routerLink="/blog">Blog</a>
 	              <a class="dropdown-item" routerLink="/blog">All Blog</a>
+	              <a class="dropdown-item" routerLink="/blog/1">Latest Post</a>
+	            </div>
+	          </li>
+	          <li class="nav-item dropdown">
+	            <a class="nav-link dropdown-toggle" href="#cetificates-section" role="button" aria-haspopup="true" aria-expanded="false"><span>Certifications</span></a>
+	            <div class="dropdown-menu">
+	              <a class="dropdown-item" href="#cetificates-section" (click)="goToSection('cetificates-section', $event)">Certifications</a>
+	              <a class="dropdown-item" routerLink="/certifications">All Certifications</a>
 	            </div>
 	          </li>
 	        </ul>

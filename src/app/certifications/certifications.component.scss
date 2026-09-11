@@ -1,0 +1,52 @@
+.sub-navbar {
+  position: relative;
+  z-index: 3;
+  background: rgba(255, 189, 57, 0.06);
+  border-top: 1px solid rgba(255, 189, 57, 0.12);
+  border-bottom: 1px solid rgba(255, 189, 57, 0.12);
+}
+
+.sub-navbar__links {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.sub-navbar__link {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover,
+  &:focus {
+    color: #ffffff;
+    border-color: rgba(255, 189, 57, 0.6);
+  }
+
+  &.is-active {
+    color: #000000;
+    background: #ffbd39;
+    border-color: #ffbd39;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .sub-navbar__links {
+    flex-wrap: nowrap;
+  }
+}

@@ -320,62 +320,67 @@
         </div>
     		<div class="row">
     			<div class="col-md-4">
-    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(images/project-4.jpg);">
+    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[0].image + ')'">
     					<div class="overlay"></div>
     				<div class="text text-center p-4">
-    					<h3><a href="#">Branding &amp; Illustration Design</a></h3>
-    					<span>Web Design</span>
+    					<h3><a [routerLink]="['/project', projects[0].id]">{{ projects[0].title }}</a></h3>
+    					<span>{{ projects[0].category }}</span>
     				</div>
     				</div>
   				</div>
   				<div class="col-md-8">
-    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(images/project-5.jpg);">
+    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[1].image + ')'">
     					<div class="overlay"></div>
     				<div class="text text-center p-4">
-    					<h3><a href="#">Branding &amp; Illustration Design</a></h3>
-    					<span>Web Design</span>
+    					<h3><a [routerLink]="['/project', projects[1].id]">{{ projects[1].title }}</a></h3>
+    					<span>{{ projects[1].category }}</span>
     				</div>
     				</div>
   				</div>
 
     			<div class="col-md-8">
-    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(images/project-1.jpg);">
+    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[2].image + ')'">
     					<div class="overlay"></div>
     				<div class="text text-center p-4">
-    					<h3><a href="#">Branding &amp; Illustration Design</a></h3>
-    					<span>Web Design</span>
+    					<h3><a [routerLink]="['/project', projects[2].id]">{{ projects[2].title }}</a></h3>
+    					<span>{{ projects[2].category }}</span>
     				</div>
     				</div>
 
-    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(images/project-6.jpg);">
+    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[3].image + ')'">
     					<div class="overlay"></div>
     				<div class="text text-center p-4">
-    					<h3><a href="#">Branding &amp; Illustration Design</a></h3>
-    					<span>Web Design</span>
+    					<h3><a [routerLink]="['/project', projects[3].id]">{{ projects[3].title }}</a></h3>
+    					<span>{{ projects[3].category }}</span>
     				</div>
     				</div>
     			</div>
     			<div class="col-md-4">
     				<div class="row">
     					<div class="col-md-12">
-			    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(images/project-2.jpg);">
+			    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[4].image + ')'">
 			    					<div class="overlay"></div>
 				    				<div class="text text-center p-4">
-				    					<h3><a href="#">Branding &amp; Illustration Design</a></h3>
-				    					<span>Web Design</span>
+				    					<h3><a [routerLink]="['/project', projects[4].id]">{{ projects[4].title }}</a></h3>
+				    					<span>{{ projects[4].category }}</span>
 				    				</div>
 			    				</div>
 	    				</div>
 	    				<div class="col-md-12">
-			    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(images/project-3.jpg);">
+			    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[5].image + ')'">
 			    					<div class="overlay"></div>
 				    				<div class="text text-center p-4">
-				    					<h3><a href="#">Branding &amp; Illustration Design</a></h3>
-				    					<span>Web Design</span>
+				    					<h3><a [routerLink]="['/project', projects[5].id]">{{ projects[5].title }}</a></h3>
+				    					<span>{{ projects[5].category }}</span>
 				    				</div>
 			    				</div>
 	    				</div>
     				</div>
+    			</div>
+    		</div>
+    		<div class="row justify-content-center mt-5">
+    			<div class="col-md-6 text-center ftco-animate">
+    				<p><a routerLink="/projects" class="btn btn-primary py-4 px-5">View All Projects</a></p>
     			</div>
     		</div>
     	</div>
@@ -391,63 +396,18 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6">
-					<div class="resume-wrap ftco-animate">
-						<span class="date">2014-2015</span>
-						<h2>Master Degree of Design</h2>
-						<span class="position">Cambridge University</span>
-						<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary
-							regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your
-							mouth.</p>
+				@for (cert of certificates; track cert.id) {
+					<div class="col-md-6 ftco-animate">
+						<app-cert-card [certificate]="cert" />
 					</div>
-					<div class="resume-wrap ftco-animate">
-						<span class="date">2014-2015</span>
-						<h2>Bachelor's Degree of C.A</h2>
-						<span class="position">Cambridge University</span>
-						<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary
-							regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your
-							mouth.</p>
-					</div>
-					<div class="resume-wrap ftco-animate">
-						<span class="date">2014-2015</span>
-						<h2>Diploma in Computer</h2>
-						<span class="position">Cambridge University</span>
-						<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary
-							regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your
-							mouth.</p>
-					</div>
-				</div>
-	
-				<div class="col-md-6">
-					<div class="resume-wrap ftco-animate">
-						<span class="date">2014-2015</span>
-						<h2>Art &amp; Creative Director</h2>
-						<span class="position">Cambridge University</span>
-						<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary
-							regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your
-							mouth.</p>
-					</div>
-					<div class="resume-wrap ftco-animate">
-						<span class="date">2014-2015</span>
-						<h2>Wordpress Developer</h2>
-						<span class="position">Cambridge University</span>
-						<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary
-							regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your
-							mouth.</p>
-					</div>
-					<div class="resume-wrap ftco-animate">
-						<span class="date">2017-2018</span>
-						<h2>UI/UX Designer</h2>
-						<span class="position">Cambridge University</span>
-						<p class="mt-4">A small river named Duden flows by their place and supplies it with the necessary
-							regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your
-							mouth.</p>
-					</div>
-				</div>
+				}
 			</div>
 			<div class="row justify-content-center mt-5">
 				<div class="col-md-6 text-center ftco-animate">
-					<p><a href="#" class="btn btn-primary py-4 px-5">Download CV</a></p>
+					<p>
+						<a routerLink="/certifications" class="btn btn-primary py-4 px-5 mr-2 mb-2">View All Certifications</a>
+						<a href="#" class="btn btn-primary py-4 px-5">Download CV</a>
+					</p>
 				</div>
 			</div>
 		</div>
@@ -464,56 +424,29 @@
           </div>
         </div>
         <div class="row d-flex">
-          <div class="col-md-4 d-flex ftco-animate">
-          	<div class="blog-entry justify-content-end">
-              <a routerLink="/blog" class="block-20" style="background-image: url('images/image_1.jpg');">
-              </a>
-              <div class="text mt-3 float-right d-block">
-              	<div class="d-flex align-items-center mb-3 meta">
-	                <p class="mb-0">
-	                	<span class="mr-2">June 21, 2019</span>
-	                	<a href="#" class="mr-2">Admin</a>
-	                	<a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-	                </p>
+          @for (blog of articles; track blog.id) {
+            <div class="col-md-4 d-flex ftco-animate">
+            	<div class="blog-entry justify-content-end">
+                <a [routerLink]="['/blog', blog.id]" class="block-20" [style.background-image]="'url(' + blog.image + ')'">
+                </a>
+                <div class="text mt-3 float-right d-block">
+                	<div class="d-flex align-items-center mb-3 meta">
+	                	<p class="mb-0">
+	                		<span class="mr-2">{{ blog.date }}</span>
+	                		<a href="#" class="mr-2">Admin</a>
+	                		<a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
+	                	</p>
+	                </div>
+                  <h3 class="heading"><a [routerLink]="['/blog', blog.id]">{{ blog.title }}</a></h3>
+                  <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
                 </div>
-                <h3 class="heading"><a routerLink="/blog">Why Lead Generation is Key for Business Growth</a></h3>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
               </div>
             </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-          	<div class="blog-entry justify-content-end">
-              <a routerLink="/blog" class="block-20" style="background-image: url('images/image_2.jpg');">
-              </a>
-              <div class="text mt-3 float-right d-block">
-              	<div class="d-flex align-items-center mb-3 meta">
-	                <p class="mb-0">
-	                	<span class="mr-2">June 21, 2019</span>
-	                	<a href="#" class="mr-2">Admin</a>
-	                	<a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-	                </p>
-                </div>
-                <h3 class="heading"><a routerLink="/blog">Why Lead Generation is Key for Business Growth</a></h3>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-          	<div class="blog-entry">
-              <a routerLink="/blog" class="block-20" style="background-image: url('images/image_3.jpg');">
-              </a>
-              <div class="text mt-3 float-right d-block">
-              	<div class="d-flex align-items-center mb-3 meta">
-	                <p class="mb-0">
-	                	<span class="mr-2">June 21, 2019</span>
-	                	<a href="#" class="mr-2">Admin</a>
-	                	<a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a>
-	                </p>
-                </div>
-                <h3 class="heading"><a routerLink="/blog">Why Lead Generation is Key for Business Growth</a></h3>
-                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-              </div>
-            </div>
+          }
+        </div>
+        <div class="row justify-content-center mt-5">
+          <div class="col-md-6 text-center ftco-animate">
+            <p><a routerLink="/blog" class="btn btn-primary py-4 px-5">View All Blog</a></p>
           </div>
         </div>
       </div>

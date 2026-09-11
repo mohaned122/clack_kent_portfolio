@@ -16,7 +16,6 @@ export class App {
     { id: 'resume-section', label: 'Resume' },
     { id: 'services-section', label: 'Services' },
     { id: 'skills-section', label: 'Skills' },
-    { id: 'cetificates-section', label: 'Certificates' },
     { id: 'contact-section', label: 'Contact' },
   ];
 

@@ -3,7 +3,7 @@
       <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
           <div class="col-md-12 ftco-animate pb-5 mb-3 text-center">
-            <h1 class="mb-3 bread">Project</h1>
+            <h1 class="mb-3 bread">{{ selectedProject().title }}</h1>
             <p class="breadcrumbs"><span class="mr-2"><a routerLink="/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span class="mr-2"><a routerLink="/projects">All Projects <i class="ion-ios-arrow-forward"></i></a></span> <span>Project <i class="ion-ios-arrow-forward"></i></span></p>
           </div>
         </div>
@@ -13,22 +13,75 @@
     <section class="ftco-section">
       <div class="container">
         <div class="row justify-content-center">
-          <div class="col-12 ftco-animate text-center">
-            @if (selectedProject$ | async; as selected) {
-              <div class="project img-2 ftco-animate d-flex justify-content-center align-items-center mb-4"
-                [style.background-image]="'url(' + selected.image + ')'">
-                <div class="overlay"></div>
-                <div class="text text-center p-4">
-                  <h3>{{ selected.title }}</h3>
-                  <span>{{ selected.category }}</span>
-                </div>
+          <div class="col-12 project-detail">
+
+            <div class="project img-2 ftco-animate d-flex justify-content-center align-items-center mb-4"
+              [style.background-image]="'url(' + selectedProject().image + ')'">
+              <div class="overlay"></div>
+              <div class="text text-center p-4">
+                <h3>{{ selectedProject().title }}</h3>
+                <span>{{ selectedProject().category }}</span>
               </div>
-              <h2 class="mb-3">{{ selected.title }}</h2>
-              <span class="text-primary">{{ selected.category }}</span>
-              <p class="mt-3">A small river named Duden flows by their place and supplies it with the necessary
-                regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-              <p><a routerLink="/projects" class="btn btn-primary py-3 px-4">All Projects</a></p>
-            }
+            </div>
+
+            <div class="text-center mb-4">
+              <span class="project-detail__badge">{{ selectedProject().category }}</span>
+              <h2 class="my-3">{{ selectedProject().title }}</h2>
+              <div class="project-detail__meta">
+                @if (selectedProject().role) {
+                  <span>Role: {{ selectedProject().role }}</span>
+                }
+                @if (selectedProject().duration) {
+                  <span>Duration: {{ selectedProject().duration }}</span>
+                }
+                <span>Year: {{ selectedProject().createdAt.getFullYear() }}</span>
+              </div>
+            </div>
+
+            <div class="row project-detail__row">
+              @for (paragraph of problemParagraphs(); track $index) {
+                <div class="col-md-6">
+                  <div class="project-detail__panel">
+                    <h3 class="project-detail__panel-title">
+                      {{ $index === 0 ? 'The Problem' : 'The Approach' }}
+                    </h3>
+                    <p>{{ paragraph }}</p>
+                  </div>
+                </div>
+              }
+              @if (selectedProject().solution) {
+                <div class="col-md-6">
+                  <div class="project-detail__panel">
+                    <h3 class="project-detail__panel-title">The Solution</h3>
+                    <p>{{ selectedProject().solution }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="text-center mt-4">
+              <h3 class="project-detail__tech-title">Technologies used</h3>
+              <div class="project-detail__techs">
+                @for (tech of selectedProject().technologies; track tech) {
+                  <span class="project-detail__tech">{{ tech }}</span>
+                }
+              </div>
+              <div class="mt-4">
+                @if (selectedProject().live) {
+                  <a [href]="selectedProject().live" target="_blank" rel="noopener noreferrer"
+                    class="btn btn-primary py-3 px-4 mr-2 mb-2">Live Demo</a>
+                }
+                @if (selectedProject().github) {
+                  <a [href]="selectedProject().github" target="_blank" rel="noopener noreferrer"
+                    class="btn btn-primary py-3 px-4 mr-2 mb-2">View Code</a>
+                }
+                @if (selectedProject().downloadLink) {
+                  <a [href]="selectedProject().downloadLink" class="btn btn-primary py-3 px-4 mr-2 mb-2">Download</a>
+                }
+              </div>
+              <p class="mt-3"><a routerLink="/projects" class="btn btn-secondary-outline py-3 px-4">All Projects</a></p>
+            </div>
+
           </div>
         </div>
       </div>

@@ -1,30 +1,41 @@
-import { Component, inject } from '@angular/core';
+import { Component, AfterViewInit, computed, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
-import { map } from 'rxjs';
+import { projects } from '../data/projects.data';
+
+declare function clarkInit(): void;
 
 @Component({
   selector: 'app-project-detail',
-  imports: [RouterLink, AsyncPipe],
+  imports: [RouterLink],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
 })
-export class ProjectDetail {
-  private readonly route = inject(ActivatedRoute);
+export class ProjectDetail implements AfterViewInit {
+  protected readonly projects = projects;
 
-  private readonly projects = [
-    { id: 1, title: 'Branding & Illustration Design', category: 'Web Design', image: 'images/project-4.jpg' },
-    { id: 2, title: 'Branding & Illustration Design', category: 'Web Design', image: 'images/project-5.jpg' },
-    { id: 3, title: 'Branding & Illustration Design', category: 'Web Design', image: 'images/project-1.jpg' },
-    { id: 4, title: 'Branding & Illustration Design', category: 'Web Design', image: 'images/project-6.jpg' },
-    { id: 5, title: 'Branding & Illustration Design', category: 'Web Design', image: 'images/project-2.jpg' },
-    { id: 6, title: 'Branding & Illustration Design', category: 'Web Design', image: 'images/project-3.jpg' },
-  ];
+  private readonly id = signal<string>('1');
 
-  protected readonly selectedProject$ = this.route.paramMap.pipe(
-    map((params) => {
-      const id = Number(params.get('id'));
-      return this.projects.find((project) => project.id === id) ?? this.projects[0];
-    })
+  protected readonly selectedProject = computed(
+    () => this.projects.find((p) => p.id === this.id()) ?? this.projects[0]
   );
+
+  protected readonly problemParagraphs = computed(
+    () => this.selectedProject().problem.split(/\n\n+/)
+  );
+
+  constructor(private readonly route: ActivatedRoute) {
+    this.route.paramMap.subscribe((params) => {
+      this.id.set(params.get('id') ?? '1');
+    });
+  }
+
+  ngAfterViewInit(): void {
+    if (typeof clarkInit === 'function') {
+      try {
+        clarkInit();
+      } catch {
+        // Legacy jQuery init must never block the page.
+      }
+    }
+  }
 }

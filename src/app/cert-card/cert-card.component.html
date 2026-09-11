@@ -1,0 +1,50 @@
+<div
+  class="cert-card"
+  [class.is-flipped]="flipped()"
+  role="button"
+  tabindex="0"
+  aria-label="Flip certificate: {{ certificate().title }}"
+  (click)="toggleFlip()"
+  (keydown.enter)="toggleFlip()"
+  (keydown.space)="toggleFlip()"
+>
+  <div class="cert-card__inner">
+    <div class="cert-card__face cert-card__face--front">
+      <div
+        class="cert-card__image"
+        [style.background-image]="'url(' + certificate().image + ')'"
+        role="img"
+        [attr.aria-label]="certificate().title"
+      ></div>
+      <div class="cert-card__overlay"></div>
+      <div class="cert-card__front-content">
+        <span class="cert-card__badge">Certification</span>
+        <h3 class="cert-card__front-title">{{ certificate().title }}</h3>
+      </div>
+    </div>
+    <div class="cert-card__face cert-card__face--back">
+      <h3 class="cert-card__back-title">{{ certificate().title }}</h3>
+      <span class="cert-card__issuer">{{ certificate().issuer }}</span>
+      @if (certificate().date) {
+        <span class="cert-card__date">{{ certificate().date }}</span>
+      }
+      @if (certificate().description) {
+        <p class="cert-card__desc">{{ certificate().description }}</p>
+      }
+      @if (certificate().link) {
+        <a
+          class="cert-card__link"
+          [href]="certificate().link"
+          target="_blank"
+          rel="noopener noreferrer"
+          (click)="$event.stopPropagation()"
+        >
+          View certificate
+        </a>
+      }
+      @if (!certificate().link) {
+        <span class="cert-card__flip-hint" aria-hidden="true">Click to flip</span>
+      }
+    </div>
+  </div>
+</div>
