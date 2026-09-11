@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { CertCardComponent } from '../cert-card/cert-card.component';
 import { Certificate } from '../models/certificate.model';
 import { CertificateService } from '../services/certificate.service';
+import { SeoService } from '../services/seo.service';
 import { revealAnimated } from '../utils/reveal.util';
 
 declare function clarkInit(): void;
@@ -46,6 +47,7 @@ export class CertificationsComponent implements AfterViewInit, OnDestroy {
   });
 
   private readonly certificateService = inject(CertificateService);
+  private readonly seo = inject(SeoService);
   private subscription: Subscription | null = null;
 
   setYear(year: string): void {
@@ -77,6 +79,12 @@ export class CertificationsComponent implements AfterViewInit, OnDestroy {
         // Legacy jQuery init must never block the page.
       }
     }
+    this.seo.setMeta({
+      title: 'Certifications',
+      description:
+        'Certifications earned by Mohanned Zayoud across software engineering, web development, data, and information technology.',
+      url: '/certifications',
+    });
   }
 
   ngOnDestroy(): void {

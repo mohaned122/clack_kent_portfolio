@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ArticleService } from '../services/article.service';
 import { Article } from '../models/article.model';
+import { SeoService } from '../services/seo.service';
 import { revealAnimated } from '../utils/reveal.util';
 
 declare function clarkInit(): void;
@@ -15,6 +16,7 @@ declare function clarkInit(): void;
 })
 export class BlogListComponent implements AfterViewInit, OnDestroy {
   private readonly articleService = inject(ArticleService);
+  private readonly seo = inject(SeoService);
 
   protected readonly articles = signal<Article[]>([]);
   protected readonly commentCounts = signal<Record<string, number>>({});
@@ -32,6 +34,12 @@ export class BlogListComponent implements AfterViewInit, OnDestroy {
         // Legacy jQuery init must never block the page.
       }
     }
+    this.seo.setMeta({
+      title: 'Blog',
+      description:
+        'Articles, tutorials, and updates by Mohanned Zayoud on full-stack development with Angular, Firebase, Flutter, Spring Boot, and modern web technologies.',
+      url: '/blog',
+    });
     this.subscription = this.articleService.getAll().subscribe({
       next: (list) => {
         this.articles.set(list);

@@ -1,9 +1,10 @@
-import { Component, AfterViewInit, OnDestroy, computed, signal, inject } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, computed, signal, inject, effect } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../models/project.model';
 import { ProjectService } from '../services/project.service';
 import { ImageFallbackService } from '../services/image-fallback.service';
+import { SeoService } from '../services/seo.service';
 import { revealAnimated } from '../utils/reveal.util';
 
 declare function clarkInit(): void;
@@ -32,8 +33,37 @@ export class ProjectDetail implements AfterViewInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly projectService = inject(ProjectService);
   protected readonly imageService = inject(ImageFallbackService);
+  private readonly seo = inject(SeoService);
   private subscription: Subscription | null = null;
   private routeSubscription: Subscription | null = null;
+
+  private readonly projectSeoEffect = effect(() => {
+    const project = this.selectedProject();
+    if (!project || this.loading()) {
+      return;
+    }
+    const description = this.excerpt(project.problem, 160);
+    this.seo.setMeta({
+      title: project.title,
+      description,
+      image: this.imageService.resolve(project.image, project.id),
+      url: `/projects/${project.id ?? ''}`,
+      type: 'article',
+    });
+  });
+
+  private excerpt(content: string, max: number): string {
+    const text = (content || '').replace(/\s+/g, ' ').trim();
+    if (!text) {
+      return 'A software project by Mohanned Zayoud.';
+    }
+    if (text.length <= max) {
+      return text;
+    }
+    const cut = text.slice(0, max);
+    const lastSpace = cut.lastIndexOf(' ');
+    return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut) + '…';
+  }
 
   protected projectBg(project: Project): string {
     return `url(${this.imageService.resolve(project.image, project.id)})`;

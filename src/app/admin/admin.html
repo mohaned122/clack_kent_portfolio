@@ -120,7 +120,7 @@
             <div class="md:col-span-2 flex flex-wrap gap-2">
               @for (url of galleryUrls(); track url) {
                 <div class="w-16 h-16 rounded-lg overflow-hidden border border-[var(--border)]">
-                  <img [src]="url" class="w-full h-full object-cover" />
+                  <img [src]="url" alt="Gallery image preview" class="w-full h-full object-cover" />
                 </div>
               }
             </div>

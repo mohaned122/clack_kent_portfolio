@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { Project } from '../models/project.model';
 import { ProjectService } from '../services/project.service';
 import { ImageFallbackService } from '../services/image-fallback.service';
+import { SeoService } from '../services/seo.service';
 import { revealAnimated } from '../utils/reveal.util';
 
 declare function clarkInit(): void;
@@ -52,6 +53,7 @@ export class Projects implements AfterViewInit, OnDestroy {
 
   private readonly projectService = inject(ProjectService);
   protected readonly imageService = inject(ImageFallbackService);
+  private readonly seo = inject(SeoService);
   private subscription: Subscription | null = null;
 
   protected projectBg(project: Project): string {
@@ -123,6 +125,12 @@ export class Projects implements AfterViewInit, OnDestroy {
         // Legacy jQuery init must never block the page.
       }
     }
+    this.seo.setMeta({
+      title: 'Projects',
+      description:
+        'A portfolio of software projects by Mohanned Zayoud — web and mobile applications built with Angular, Firebase, Flutter, Spring Boot, Docker, and modern cloud technologies.',
+      url: '/projects',
+    });
   }
 
   ngOnDestroy(): void {

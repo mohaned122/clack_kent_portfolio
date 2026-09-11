@@ -12,6 +12,7 @@ import { ProjectService } from '../services/project.service';
 import { CertificateService } from '../services/certificate.service';
 import { ContactService } from '../services/contact.service';
 import { ImageFallbackService } from '../services/image-fallback.service';
+import { SeoService } from '../services/seo.service';
 import { Education } from '../models/education.model';
 import { Internship } from '../models/internship.model';
 import { Project } from '../models/project.model';
@@ -68,6 +69,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private readonly certificateService = inject(CertificateService);
   private readonly contactService = inject(ContactService);
   private readonly articleService = inject(ArticleService);
+  private readonly seo = inject(SeoService);
   private educationSubscription: Subscription | null = null;
   private internshipSubscription: Subscription | null = null;
   private projectSubscription: Subscription | null = null;
@@ -165,6 +167,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         this.articlesLoading.set(false);
         this.articlesError.set(true);
       },
+    });
+    this.seo.setPersonSchema();
+    this.seo.setMeta({
+      title: 'Full-Stack Developer & Software Engineering Student',
+      description:
+        'Portfolio of Mohanned Zayoud — full-stack developer and software engineering student from Tunisia building web and mobile applications with Angular, Firebase, Flutter, and Spring Boot.',
+      url: '/',
     });
   }
 

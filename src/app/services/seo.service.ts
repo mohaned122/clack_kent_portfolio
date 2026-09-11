@@ -4,6 +4,7 @@ import { Title, Meta } from '@angular/platform-browser';
 
 const BASE_URL = 'https://mohannedzayoud.web.app';
 const SITE_NAME = 'Mohanned Zayoud — Portfolio';
+const DEFAULT_IMAGE = 'assets/logos/logo_site.png';
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
@@ -24,7 +25,7 @@ export class SeoService {
   }) {
     const fullTitle = `${config.title} | ${SITE_NAME}`;
     const pageUrl = config.url ? `${BASE_URL}${config.url}` : BASE_URL;
-    const imageUrl = config.image?.startsWith('http') ? config.image : `${BASE_URL}/${config.image || 'logos/logo_site.png'}`;
+    const imageUrl = config.image?.startsWith('http') ? config.image : `${BASE_URL}/${config.image || DEFAULT_IMAGE}`;
     const type = config.type || 'website';
 
     this.title.setTitle(fullTitle);
@@ -45,16 +46,16 @@ export class SeoService {
   }
 
   private setOpenGraph(title: string, description: string, url: string, image: string, type: string) {
-    const tags: { name: string; content: string }[] = [
-      { name: 'og:title', content: title },
-      { name: 'og:description', content: description },
-      { name: 'og:url', content: url },
-      { name: 'og:image', content: image },
-      { name: 'og:image:width', content: '1200' },
-      { name: 'og:image:height', content: '630' },
-      { name: 'og:type', content: type },
-      { name: 'og:site_name', content: SITE_NAME },
-      { name: 'og:locale', content: 'en_US' },
+    const tags: { property: string; content: string }[] = [
+      { property: 'og:title', content: title },
+      { property: 'og:description', content: description },
+      { property: 'og:url', content: url },
+      { property: 'og:image', content: image },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
+      { property: 'og:type', content: type },
+      { property: 'og:site_name', content: SITE_NAME },
+      { property: 'og:locale', content: 'en_US' },
     ];
     tags.forEach((t) => this.meta.updateTag(t));
   }
@@ -109,7 +110,7 @@ export class SeoService {
       url: BASE_URL,
       email: 'mohanned.zayoud@esen.tn',
       telephone: '+216 51 916 715',
-      image: `${BASE_URL}/logos/logo_site.png`,
+      image: `${BASE_URL}/${DEFAULT_IMAGE}`,
       address: { '@type': 'PostalAddress', addressCountry: 'TN' },
       sameAs: [
         'https://github.com/mohaned122',
@@ -158,6 +159,49 @@ export class SeoService {
     const script = document.createElement('script');
     script.type = 'application/ld+json';
     script.id = 'breadcrumb-schema';
+    script.textContent = JSON.stringify(json);
+    document.head.appendChild(script);
+  }
+
+  setArticleSchema(config: {
+    title: string;
+    description: string;
+    image?: string;
+    url: string;
+    datePublished?: string;
+    dateModified?: string;
+    author?: string;
+  }) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const existing = document.getElementById('article-schema');
+    if (existing) existing.remove();
+    const imageUrl = config.image?.startsWith('http')
+      ? config.image
+      : `${BASE_URL}/${config.image || DEFAULT_IMAGE}`;
+    const json = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: config.title,
+      description: config.description,
+      image: imageUrl,
+      url: `${BASE_URL}${config.url}`,
+      mainEntityOfPage: `${BASE_URL}${config.url}`,
+      datePublished: config.datePublished || undefined,
+      dateModified: config.dateModified || config.datePublished || undefined,
+      author: {
+        '@type': 'Person',
+        name: config.author || 'Mohanned Zayoud',
+        url: BASE_URL,
+      },
+      publisher: {
+        '@type': 'Person',
+        name: 'Mohanned Zayoud',
+        url: BASE_URL,
+      },
+    };
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'article-schema';
     script.textContent = JSON.stringify(json);
     document.head.appendChild(script);
   }

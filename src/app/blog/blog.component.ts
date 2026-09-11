@@ -1,9 +1,10 @@
-import { Component, AfterViewInit, computed, inject, signal, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, computed, inject, signal, OnDestroy, effect } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ArticleService } from '../services/article.service';
 import { Article, ArticleComment } from '../models/article.model';
+import { SeoService } from '../services/seo.service';
 import { revealAnimated } from '../utils/reveal.util';
 
 declare function clarkInit(): void;
@@ -16,6 +17,7 @@ declare function clarkInit(): void;
 })
 export class BlogComponent implements AfterViewInit, OnDestroy {
   private readonly articleService = inject(ArticleService);
+  private readonly seo = inject(SeoService);
 
   protected readonly article = signal<Article | null>(null);
   protected readonly loading = signal(true);
@@ -68,6 +70,43 @@ export class BlogComponent implements AfterViewInit, OnDestroy {
     const article = this.article();
     return article && article.content ? article.content.split(/\n\n+/) : [];
   });
+
+  private readonly articleSeoEffect = effect(() => {
+    const article = this.article();
+    if (!article || this.loading()) {
+      return;
+    }
+    const description = this.plainText(article.content, 160);
+    const path = `/blog/${article.id ?? ''}`;
+    this.seo.setMeta({
+      title: article.title,
+      description,
+      image: article.image || 'assets/logos/logo_site.png',
+      url: path,
+      type: 'article',
+    });
+    this.seo.setArticleSchema({
+      title: article.title,
+      description,
+      image: article.image,
+      url: path,
+      datePublished: article.date,
+      dateModified: article.date,
+    });
+  });
+
+  private plainText(content: string, max: number): string {
+    const text = (content || '').replace(/\s+/g, ' ').trim();
+    if (!text) {
+      return 'Read this article by Mohanned Zayoud about software development.';
+    }
+    if (text.length <= max) {
+      return text;
+    }
+    const cut = text.slice(0, max);
+    const lastSpace = cut.lastIndexOf(' ');
+    return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut) + '…';
+  }
 
   private readonly route = inject(ActivatedRoute);
   private paramSubscription: Subscription | null = null;
