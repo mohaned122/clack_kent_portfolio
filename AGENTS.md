@@ -48,21 +48,14 @@ Elements with class `ftco-animate` start as `opacity: 0; visibility: hidden` (`s
 
 **Problem:** Any `@for`/`@if` block that renders `.ftco-animate` elements *after* `clarkInit()` (e.g. Firebase/async data arriving a tick later) gets no Waypoint binding, so those elements never receive `fadeInUp ftco-animated` and stay permanently invisible (`visibility: hidden`). The section simply looks empty — DOM contains the cards but the page shows nothing.
 
-**Solution:** After the data lands in a signal, reveal the dynamically-added elements with the same classes the Waypoint handler uses. Reference implementation in `HomeComponent` (`src/app/home/home.component.ts`, `revealResumeCards()`):
+**Solution:** After the data lands in a signal, reveal the dynamically-added elements with the same classes the Waypoint handler uses. Use the shared helper `src/app/utils/reveal.util.ts` (`revealAnimated(selector, staggerMs = 50)`) from each subscription's `next()` after setting its signal. Examples:
 
 ```ts
-private revealResumeCards(): void {
-  setTimeout(() => {
-    const cards = Array.from(
-      this.elementRef.nativeElement.querySelectorAll(
-        '#resume-section .resume-wrap.ftco-animate:not(.ftco-animated)'
-      )
-    ) as HTMLElement[];
-    cards.forEach((card, index) => {
-      setTimeout(() => card.classList.add('fadeInUp', 'ftco-animated'), index * 50);
-    });
-  }, 0);
-}
+// after setting this.educationEntries / this.internshipEntries
+revealAnimated('#resume-section .resume-wrap.ftco-animate');
+// after the projects list lands / every 30s rotation, and after filter changes
+revealAnimated('#projects-section .project.ftco-animate');
+revealAnimated('#all-projects-section .project.ftco-animate');
 ```
 
 Call it from each subscription's `next()` after setting its signal. The `:not(.ftco-animated)` guard makes it idempotent, and the stagger (`index * 50`) mirrors the site's existing reveal pattern. Do NOT re-run `clarkInit()` to fix this — it re-initializes carousels/counters and double-binds waypoints. Use this same approach for any future dynamically-added `ftco-animate` content (Firestore lists, dashboards, etc.).

@@ -2,15 +2,18 @@ import { Component, AfterViewInit, OnDestroy, ElementRef, inject, signal } from 
 import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CertCardComponent } from '../cert-card/cert-card.component';
-import { projects } from '../data/projects.data';
 import { articles } from '../data/articles.data';
 import { certificates } from '../data/certificates.data';
 import { ScrollService } from '../services/scroll.service';
 import { CvService } from '../services/cv.service';
 import { EducationService } from '../services/education.service';
 import { InternshipService } from '../services/internship.service';
+import { ProjectService } from '../services/project.service';
+import { ImageFallbackService } from '../services/image-fallback.service';
 import { Education } from '../models/education.model';
 import { Internship } from '../models/internship.model';
+import { Project } from '../models/project.model';
+import { revealAnimated } from '../utils/reveal.util';
 
 declare function clarkInit(): void;
 
@@ -24,13 +27,18 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   protected readonly typedText = signal('');
 
-  protected readonly projects = projects;
   protected readonly articles = articles;
   protected readonly certificates = certificates;
+
+  protected readonly allProjects = signal<Project[]>([]);
+  protected readonly homeProjects = signal<Project[]>([]);
+  protected readonly projectsLoading = signal(true);
+  protected readonly projectError = signal(false);
 
   private readonly router = inject(Router);
   private readonly scrollService = inject(ScrollService);
   protected readonly cvService = inject(CvService);
+  private readonly imageService = inject(ImageFallbackService);
 
   protected readonly educationEntries = signal<Education[]>([]);
   protected readonly internshipEntries = signal<Internship[]>([]);
@@ -39,8 +47,11 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   private readonly educationService = inject(EducationService);
   private readonly internshipService = inject(InternshipService);
+  private readonly projectService = inject(ProjectService);
   private educationSubscription: Subscription | null = null;
   private internshipSubscription: Subscription | null = null;
+  private projectSubscription: Subscription | null = null;
+  private projectsRotationTimer: ReturnType<typeof setInterval> | null = null;
 
   private readonly roleTitles = [
     'Software Engineer',
@@ -91,6 +102,22 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         this.internshipError.set(true);
       },
     });
+    this.projectSubscription = this.projectService.getProjects().subscribe({
+      next: (list) => {
+        this.allProjects.set(list);
+        this.rotateHomeProjects();
+        this.projectsLoading.set(false);
+        if (this.projectsRotationTimer === null) {
+          this.projectsRotationTimer = setInterval(() => this.rotateHomeProjects(), 30000);
+        }
+        this.revealProjects();
+      },
+      error: (err) => {
+        console.error('Projects load failed:', err);
+        this.projectsLoading.set(false);
+        this.projectError.set(true);
+      },
+    });
   }
 
   protected goToContact(): void {
@@ -129,8 +156,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     if (this.skillsObserver !== null) {
       this.skillsObserver.disconnect();
     }
+    if (this.projectsRotationTimer !== null) {
+      clearInterval(this.projectsRotationTimer);
+    }
     this.educationSubscription?.unsubscribe();
     this.internshipSubscription?.unsubscribe();
+    this.projectSubscription?.unsubscribe();
   }
 
   private toEpoch(value: unknown): number {
@@ -184,17 +215,24 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     return exp.position || exp.company || 'Internship';
   }
 
+  protected rotateHomeProjects(): void {
+    this.homeProjects.set(pickRandomProjects(this.allProjects(), 6));
+  }
+
+  protected projectAt(index: number): Project | undefined {
+    return this.homeProjects()[index];
+  }
+
+  protected projectBg(project: Project): string {
+    return `url(${this.imageService.resolve(project.image, project.id)})`;
+  }
+
+  private revealProjects(): void {
+    revealAnimated('#projects-section .ftco-animate');
+  }
+
   private revealResumeCards(): void {
-    setTimeout(() => {
-      const cards = Array.from(
-        this.elementRef.nativeElement.querySelectorAll(
-          '#resume-section .resume-wrap.ftco-animate:not(.ftco-animated)'
-        )
-      ) as HTMLElement[];
-      cards.forEach((card, index) => {
-        setTimeout(() => card.classList.add('fadeInUp', 'ftco-animated'), index * 50);
-      });
-    }, 0);
+    revealAnimated('#resume-section .resume-wrap.ftco-animate');
   }
 
   private startTyping(): void {
@@ -318,4 +356,16 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       label.textContent = current + '%';
     }
   }
+}
+
+function pickRandomProjects<T>(items: T[], count: number): T[] {
+  if (items.length <= count) {
+    return [...items];
+  }
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, count);
 }

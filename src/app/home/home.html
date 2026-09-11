@@ -311,73 +311,104 @@
 
     <section class="ftco-section ftco-project" id="projects-section">
     	<div class="container">
-    		<div class="row justify-content-center pb-5">
+<div class="row justify-content-center pb-5">
           <div class="col-md-12 heading-section text-center ftco-animate">
           	<h1 class="big big-2">Projects</h1>
             <h2 class="mb-4">My Projects</h2>
             <p>What starts as an idea, grows through curiosity, and becomes real one line at a time?</p>
           </div>
         </div>
+        @if (projectsLoading()) {
+          <div class="row">
+            <div class="col-12 text-center ftco-animate">
+              <p class="mb-3">Loading projects…</p>
+            </div>
+          </div>
+        } @else if (projectError()) {
+          <div class="row">
+            <div class="col-12 text-center ftco-animate">
+              <p class="mb-3">Unable to load projects.</p>
+            </div>
+          </div>
+        } @else if (homeProjects().length > 0) {
     		<div class="row">
     			<div class="col-md-4">
-    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[0].image + ')'">
-    					<div class="overlay"></div>
+              @if (projectAt(0); as p0) {
+    				    <div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="projectBg(p0)">
+    					    <div class="overlay"></div>
     				<div class="text text-center p-4">
-    					<h3><a [routerLink]="['/project', projects[0].id]">{{ projects[0].title }}</a></h3>
-    					<span>{{ projects[0].category }}</span>
+    				<h3><a [routerLink]="['/project', p0.id]">{{ p0.title }}</a></h3>
+    				<span>{{ p0.category }}</span>
     				</div>
-    				</div>
+    				    </div>
+              }
   				</div>
   				<div class="col-md-8">
-    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[1].image + ')'">
-    					<div class="overlay"></div>
+              @if (projectAt(1); as p1) {
+    				    <div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="projectBg(p1)">
+    					    <div class="overlay"></div>
     				<div class="text text-center p-4">
-    					<h3><a [routerLink]="['/project', projects[1].id]">{{ projects[1].title }}</a></h3>
-    					<span>{{ projects[1].category }}</span>
+    				<h3><a [routerLink]="['/project', p1.id]">{{ p1.title }}</a></h3>
+    				<span>{{ p1.category }}</span>
     				</div>
-    				</div>
+    				    </div>
+              }
   				</div>
 
     			<div class="col-md-8">
-    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[2].image + ')'">
-    					<div class="overlay"></div>
+              @if (projectAt(2); as p2) {
+    				    <div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="projectBg(p2)">
+    					    <div class="overlay"></div>
     				<div class="text text-center p-4">
-    					<h3><a [routerLink]="['/project', projects[2].id]">{{ projects[2].title }}</a></h3>
-    					<span>{{ projects[2].category }}</span>
+    				<h3><a [routerLink]="['/project', p2.id]">{{ p2.title }}</a></h3>
+    				<span>{{ p2.category }}</span>
     				</div>
-    				</div>
-
-    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[3].image + ')'">
-    					<div class="overlay"></div>
+    				    </div>
+              }
+              @if (projectAt(3); as p3) {
+    				    <div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="projectBg(p3)">
+    					    <div class="overlay"></div>
     				<div class="text text-center p-4">
-    					<h3><a [routerLink]="['/project', projects[3].id]">{{ projects[3].title }}</a></h3>
-    					<span>{{ projects[3].category }}</span>
+    				<h3><a [routerLink]="['/project', p3.id]">{{ p3.title }}</a></h3>
+    				<span>{{ p3.category }}</span>
     				</div>
-    				</div>
+    				    </div>
+              }
     			</div>
     			<div class="col-md-4">
     				<div class="row">
     					<div class="col-md-12">
-			    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[4].image + ')'">
-			    					<div class="overlay"></div>
-				    				<div class="text text-center p-4">
-				    					<h3><a [routerLink]="['/project', projects[4].id]">{{ projects[4].title }}</a></h3>
-				    					<span>{{ projects[4].category }}</span>
-				    				</div>
-			    				</div>
-	    				</div>
-	    				<div class="col-md-12">
-			    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="'url(' + projects[5].image + ')'">
-			    					<div class="overlay"></div>
-				    				<div class="text text-center p-4">
-				    					<h3><a [routerLink]="['/project', projects[5].id]">{{ projects[5].title }}</a></h3>
-				    					<span>{{ projects[5].category }}</span>
-				    				</div>
-			    				</div>
-	    				</div>
+                @if (projectAt(4); as p4) {
+  			    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="projectBg(p4)">
+  			    					<div class="overlay"></div>
+  				    			<div class="text text-center p-4">
+  				    			<h3><a [routerLink]="['/project', p4.id]">{{ p4.title }}</a></h3>
+  				    			<span>{{ p4.category }}</span>
+  				    			</div>
+  			    				</div>
+              }
+ 	    				</div>
+ 	    				<div class="col-md-12">
+                @if (projectAt(5); as p5) {
+  			    				<div class="project img ftco-animate d-flex justify-content-center align-items-center" [style.background-image]="projectBg(p5)">
+  			    					<div class="overlay"></div>
+  				    			<div class="text text-center p-4">
+  				    			<h3><a [routerLink]="['/project', p5.id]">{{ p5.title }}</a></h3>
+  				    			<span>{{ p5.category }}</span>
+  				    			</div>
+  			    				</div>
+              }
+ 	    				</div>
     				</div>
     			</div>
     		</div>
+        } @else {
+          <div class="row">
+            <div class="col-12 text-center ftco-animate">
+              <p class="mb-3">No projects yet.</p>
+            </div>
+          </div>
+        }
     		<div class="row justify-content-center mt-5">
     			<div class="col-md-6 text-center ftco-animate">
     				<p><a routerLink="/projects" class="btn btn-primary py-4 px-5">View All Projects</a></p>
