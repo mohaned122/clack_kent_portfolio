@@ -1,9 +1,11 @@
-import { Component, AfterViewInit, OnDestroy, ElementRef, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, AfterViewInit, OnDestroy, ElementRef, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CertCardComponent } from '../cert-card/cert-card.component';
 import { projects } from '../data/projects.data';
 import { articles } from '../data/articles.data';
 import { certificates } from '../data/certificates.data';
+import { ScrollService } from '../services/scroll.service';
+import { CvService } from '../services/cv.service';
 
 declare function clarkInit(): void;
 
@@ -20,6 +22,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   protected readonly projects = projects;
   protected readonly articles = articles;
   protected readonly certificates = certificates;
+
+  private readonly router = inject(Router);
+  private readonly scrollService = inject(ScrollService);
+  protected readonly cvService = inject(CvService);
 
   private readonly roleTitles = [
     'Software Engineer',
@@ -48,6 +54,22 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private skillsObserver: IntersectionObserver | null = null;
 
   constructor(private readonly elementRef: ElementRef) {}
+
+  protected goToContact(): void {
+    this.navigateTo('contact-section');
+  }
+
+  protected scrollToProjects(): void {
+    this.navigateTo('projects-section');
+  }
+
+  private navigateTo(section: string): void {
+    if (this.router.url === '/') {
+      this.scrollService.scrollTo(section);
+    } else {
+      this.router.navigate(['/'], { fragment: section });
+    }
+  }
 
   ngAfterViewInit(): void {
     if (typeof clarkInit === 'function') {

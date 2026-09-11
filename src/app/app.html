@@ -8,31 +8,14 @@
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav nav ml-auto">
 	          @for (item of navItems; track item.id) {
-	            <li class="nav-item">
-	              <a href="#{{ item.id }}" class="nav-link" (click)="goToSection(item.id, $event)"><span>{{ item.label }}</span></a>
+	            <li class="nav-item" [class.active]="activeItem() === item.id">
+	              @if (item.route) {
+	                <a [routerLink]="item.route" class="nav-link"><span>{{ item.label }}</span></a>
+	              } @else {
+	                <a href="#{{ item.id }}" class="nav-link" (click)="goToSection(item.id, $event)"><span>{{ item.label }}</span></a>
+	              }
 	            </li>
 	          }
-	          <li class="nav-item dropdown">
-	            <a class="nav-link dropdown-toggle" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span>Projects</span></a>
-	            <div class="dropdown-menu">
-	              <a class="dropdown-item" routerLink="/projects">All Projects</a>
-	              <a class="dropdown-item" routerLink="/project/1">Featured Project</a>
-	            </div>
-	          </li>
-	          <li class="nav-item dropdown">
-	            <a class="nav-link dropdown-toggle" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span>Blog</span></a>
-	            <div class="dropdown-menu">
-	              <a class="dropdown-item" routerLink="/blog">All Blog</a>
-	              <a class="dropdown-item" routerLink="/blog/1">Latest Post</a>
-	            </div>
-	          </li>
-	          <li class="nav-item dropdown">
-	            <a class="nav-link dropdown-toggle" href="#cetificates-section" role="button" aria-haspopup="true" aria-expanded="false"><span>Certifications</span></a>
-	            <div class="dropdown-menu">
-	              <a class="dropdown-item" href="#cetificates-section" (click)="goToSection('cetificates-section', $event)">Certifications</a>
-	              <a class="dropdown-item" routerLink="/certifications">All Certifications</a>
-	            </div>
-	          </li>
 	        </ul>
 	      </div>
 	    </div>
@@ -87,11 +70,11 @@
              <div class="ftco-footer-widget mb-4">
               <h2 class="ftco-heading-2">Services</h2>
               <ul class="list-unstyled">
-                <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Web Design</a></li>
+                <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>App & System </a></li>
                 <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Web Development</a></li>
-                <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Business Strategy</a></li>
-                <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Data Analysis</a></li>
-                <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Graphic Design</a></li>
+                <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>AI & ML </a></li>
+                <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Devops pipeline</a></li>
+                <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Montage &3D artist</a></li>
               </ul>
             </div>
           </div>
@@ -121,4 +104,29 @@
 
   <!-- loader -->
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
-  <!-- let's make it more cooler  -->
+
+  @if (cvService.dialogOpen()) {
+    <div class="cv-dialog"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="cv-dialog-title"
+         tabindex="-1"
+         (click)="closeCvDialog()"
+         (keydown.escape)="closeCvDialog()">
+      <div class="cv-dialog__box" (click)="$event.stopPropagation()" (keydown.escape)="$event.stopPropagation()">
+        <button type="button" class="cv-dialog__close" (click)="closeCvDialog()" aria-label="Close">&times;</button>
+        <h3 id="cv-dialog-title">Download CV</h3>
+        <p class="cv-dialog__text">Choose your preferred language</p>
+        <div class="cv-dialog__options">
+          <button type="button" class="cv-dialog__option" (click)="cvService.openPdf('en')">
+            <span class="cv-dialog__code">EN</span>
+            English
+          </button>
+          <button type="button" class="cv-dialog__option" (click)="cvService.openPdf('fr')">
+            <span class="cv-dialog__code">FR</span>
+            French
+          </button>
+        </div>
+      </div>
+    </div>
+  }

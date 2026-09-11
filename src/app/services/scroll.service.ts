@@ -19,8 +19,14 @@ export class ScrollService {
 
   scrollTo(id: string): void {
     const el = this.document.getElementById(id);
-    if (el) {
-      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' });
+    if (!el) {
+      return;
     }
+    const reduceMotion =
+      typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({
+      top: el.getBoundingClientRect().top + window.scrollY - 70,
+      behavior: reduceMotion ? 'auto' : 'smooth'
+    });
   }
 }

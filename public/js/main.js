@@ -66,19 +66,24 @@
 			};
 			burgerMenu();
 
-			var onePageClick = function() {
-				$(document).on('click', '#ftco-nav a[href^="#"]', function(event) {
-					if ($(this).hasClass('dropdown-toggle')) {
-						return;
-					}
-					event.preventDefault();
-					var href = $.attr(this, 'href');
-					$('html, body').animate({
-						scrollTop: $($.attr(this, 'href')).offset().top - 70
-					}, 500);
-				});
-			};
+			// Smooth scrolling for hash links is handled by Angular (ScrollService).
+			// Keeping this block as an empty marker for clarity.
+			var onePageClick = function() {};
 			onePageClick();
+
+			// Close mobile nav on link click
+			var closeMobileNav = function() {
+				var $nav = $('#ftco-nav');
+				if ($nav.hasClass('show')) {
+					if ($.fn.collapse) {
+						$nav.collapse('hide');
+					} else {
+						$nav.removeClass('show');
+						$('.js-fh5co-nav-toggle').removeClass('active');
+					}
+				}
+			};
+			$(document).on('click', '#ftco-nav .nav-link', closeMobileNav);
 
 			var dropdownMenu = function() {
 				var hoverable = window.matchMedia
