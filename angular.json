@@ -70,7 +70,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/scss/style.scss"
+              "src/scss/style.scss",
+              "src/scss/theme.scss"
             ]
           },
           "configurations": {

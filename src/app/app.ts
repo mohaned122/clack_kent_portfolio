@@ -4,6 +4,8 @@ import { NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ScrollService } from './services/scroll.service';
 import { CvService } from './services/cv.service';
+import { ThemeToggleComponent } from './theme-toggle/theme-toggle.component';
+import { ScrollTopComponent } from './scroll-top/scroll-top.component';
 
 interface NavItem {
   id: string;
@@ -13,7 +15,7 @@ interface NavItem {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterLink, RouterOutlet],
+  imports: [RouterLink, RouterOutlet, ThemeToggleComponent, ScrollTopComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

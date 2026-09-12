@@ -20,7 +20,7 @@
               <h2 class="mb-3">Article not found</h2>
               <p>The article you are looking for does not exist anymore.</p>
             } @else if (article(); as article) {
-              <span class="text-uppercase font-weight-bold" style="color: #a0f669; font-size: 13px; letter-spacing: 2px;">{{ article.category || article.type }}</span>
+              <span class="text-uppercase font-weight-bold" style="color: var(--success-text); font-size: 13px; letter-spacing: 2px;">{{ article.category || article.type }}</span>
               <h2 class="mb-3 mt-2">{{ article.title }}</h2>
               <div class="meta mb-4">
                 <span class="icon-calendar mr-2"></span>{{ article.date }}
@@ -108,7 +108,7 @@
                   }
                   @if (commentSubmitted()) {
                     <div class="form-group">
-                      <p class="mb-0" style="color: #a0f669;">Your comment has been posted successfully.</p>
+                      <p class="mb-0" style="color: var(--success-text);">Your comment has been posted successfully.</p>
                     </div>
                   }
                   <div class="form-group">

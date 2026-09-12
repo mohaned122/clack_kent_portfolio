@@ -51,3 +51,25 @@
     background: #a0f669;
   }
 }
+
+:host-context([data-theme='light']) {
+  .filters-bar {
+    border-color: rgba(15, 20, 28, 0.12);
+  }
+
+  .filters-bar .form-control {
+    color: var(--text-strong);
+    background-color: var(--surface-solid);
+    border-color: var(--border);
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
+
+    &:focus {
+      color: var(--text-strong);
+      background-color: var(--surface-solid);
+      border-color: rgba(255, 189, 57, 0.75);
+    }
+  }
+}

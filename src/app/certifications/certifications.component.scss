@@ -50,3 +50,21 @@
     flex-wrap: nowrap;
   }
 }
+
+:host-context([data-theme='light']) {
+  .sub-navbar {
+    background: rgba(255, 189, 57, 0.05);
+    border-color: rgba(15, 20, 28, 0.12);
+  }
+
+  .sub-navbar__link {
+    color: #3b4252;
+    border-color: rgba(15, 20, 28, 0.16);
+
+    &:hover,
+    &:focus {
+      color: #a16207;
+      border-color: rgba(255, 189, 57, 0.7);
+    }
+  }
+}

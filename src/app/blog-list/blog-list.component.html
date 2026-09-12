@@ -42,7 +42,7 @@
                           </p>
                         </div>
                         <h3 class="heading"><a [routerLink]="['/blog', article.id]">{{ article.title }}</a></h3>
-                        <span class="text-uppercase font-weight-bold" style="color: #ffbd39; font-size: 13px;">{{ article.type }}</span>
+                        <span class="text-uppercase font-weight-bold" style="color: var(--accent-text); font-size: 13px;">{{ article.type }}</span>
                         <p>{{ blogExcerpt(article) }}</p>
                         <p><a [routerLink]="['/blog', article.id]" class="btn-custom">Continue Reading <span class="icon-long-arrow-right"></span></a></p>
                       </div>

@@ -1,0 +1,12 @@
+<button
+  type="button"
+  class="theme-toggle"
+  [attr.aria-pressed]="theme() === 'light'"
+  [attr.aria-label]="theme() === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+  [title]="theme() === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+  (click)="themeService.toggle()"
+>
+  <span class="theme-toggle__icon theme-toggle__icon--moon icon-moon-o" aria-hidden="true"></span>
+  <span class="theme-toggle__icon theme-toggle__icon--sun icon-sun-o" aria-hidden="true"></span>
+  <span class="theme-toggle__label">{{ theme() === 'dark' ? 'Dark' : 'Light' }}</span>
+</button>

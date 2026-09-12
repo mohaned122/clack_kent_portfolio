@@ -4,6 +4,15 @@
   <meta charset="utf-8">
   <title>Mohanned zayoud - Portfolio</title>
   <base href="/">
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('clark-theme') === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" href="/assets/logos/logo_ico_tab.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">

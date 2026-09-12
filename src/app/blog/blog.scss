@@ -1,6 +1,6 @@
 .ftco-section .container .col-lg-8.ftco-animate {
   > h2 {
-    color: #ffffff;
+    color: var(--heading);
     font-size: 28px;
     line-height: 1.4;
     font-weight: 500;
@@ -12,7 +12,7 @@
   }
 
   > p {
-    color: rgba(255, 255, 255, 0.88);
+    color: var(--article-text);
     font-size: 18px;
     line-height: 1.9;
     margin-bottom: 1.4em;
@@ -28,7 +28,7 @@
   }
 
   > .meta {
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--article-meta);
     font-size: 14px;
     letter-spacing: 0.5px;
   }

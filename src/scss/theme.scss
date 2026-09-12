@@ -1,0 +1,344 @@
+/* =====================================================================
+   Theme system
+   -------------
+   Dark Mode is the default (defined in style.scss) and must stay pixel
+   identical. All shared color tokens live here; the Light Mode is a
+   single override layer scoped under [data-theme='light'].
+   The <html> element carries data-theme="light" (set by ThemeService
+   and by the no-flash snippet in index.html).
+   ===================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  --bg-light: #f4f5f7;
+  --surface: rgba(255, 255, 255, 0.1);
+  --surface-solid: #ffffff;
+  --surface-dark: #191919;
+
+  --heading: #ffffff;
+  --text: #999999;
+  --text-strong: rgba(255, 255, 255, 0.88);
+  --text-muted: rgba(255, 255, 255, 0.72);
+
+  --accent: #ffbd39;
+  --accent-text: #ffbd39;
+  --success: #a0f669;
+  --success-text: #a0f669;
+
+  --border: rgba(255, 255, 255, 0.2);
+  --border-soft: rgba(255, 255, 255, 0.15);
+
+  --btn-primary-fg: #000000;
+
+  --article-text: rgba(255, 255, 255, 0.88);
+  --article-meta: rgba(255, 255, 255, 0.75);
+
+  --toggle-bg: rgba(255, 255, 255, 0.12);
+  --toggle-fg: #ffffff;
+  --toggle-border: rgba(255, 255, 255, 0.18);
+  --toggle-shadow: rgba(0, 0, 0, 0.45);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --bg-light: #f4f5f7;
+  --surface: #ffffff;
+  --surface-dark: #f0f1f3;
+
+  --heading: #1d2129;
+  --text: #3b4252;
+  --text-strong: #2a303f;
+  --text-muted: rgba(29, 33, 41, 0.72);
+
+  --accent: #ffbd39;
+  --accent-text: #a16207;
+  --success: #a0f669;
+  --success-text: #1f7a2d;
+
+  --border: rgba(15, 20, 28, 0.16);
+  --border-soft: rgba(15, 20, 28, 0.1);
+
+  --btn-primary-fg: #141414;
+
+  --article-text: #3a4150;
+  --article-meta: rgba(15, 20, 28, 0.62);
+
+  --toggle-bg: rgba(255, 255, 255, 0.92);
+  --toggle-fg: #1d2129;
+  --toggle-border: rgba(15, 20, 28, 0.14);
+  --toggle-shadow: rgba(15, 20, 28, 0.18);
+}
+
+/* ---------------------------------------------------------------------
+   Global text & links
+   --------------------------------------------------------------------- */
+[data-theme='light'] body {
+  background-color: var(--bg-light);
+  color: var(--text);
+}
+
+[data-theme='light'] a,
+[data-theme='light'] a:hover,
+[data-theme='light'] a:focus {
+  color: var(--accent-text);
+}
+
+[data-theme='light'] h1,
+[data-theme='light'] h2,
+[data-theme='light'] h3,
+[data-theme='light'] h4,
+[data-theme='light'] h5 {
+  color: var(--heading);
+}
+
+[data-theme='light'] .heading-section .big {
+  color: rgba(29, 33, 41, 0.07);
+}
+
+/* ---------------------------------------------------------------------
+   Sections that intentionally stay dark in Light Mode
+   (hero, page banners, footer, hire-me, dark cards, CV dialog)
+   --------------------------------------------------------------------- */
+[data-theme='light'] #home-section.hero,
+[data-theme='light'] #home-section.hero .home-slider .slider-item {
+  background-color: #0b0c0e;
+}
+
+[data-theme='light'] #home-section .slider-text h1,
+[data-theme='light'] #home-section .slider-text h2,
+[data-theme='light'] #home-section .slider-text h3 {
+  color: #ffffff;
+}
+
+[data-theme='light'] .hero-wrap .slider-text h1,
+[data-theme='light'] .hero-wrap .slider-text h2 {
+  color: #ffffff;
+}
+
+[data-theme='light'] .ftco-hireme h2 {
+  color: #ffffff;
+}
+
+[data-theme='light'] .ftco-footer .ftco-footer-widget h2 {
+  color: #ffffff;
+}
+
+[data-theme='light'] .ftco-footer a,
+[data-theme='light'] .ftco-footer a:hover,
+[data-theme='light'] .ftco-footer a:focus {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme='light'] .bg-dark h1,
+[data-theme='light'] .bg-dark h2,
+[data-theme='light'] .bg-dark h3,
+[data-theme='light'] .bg-dark h4,
+[data-theme='light'] .bg-dark h5 {
+  color: #ffffff;
+}
+
+[data-theme='light'] .bg-dark p,
+[data-theme='light'] .bg-dark label {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme='light'] .cv-dialog .cv-dialog__box h3 {
+  color: #ffffff;
+}
+
+[data-theme='light'] .cv-dialog .cv-dialog__text {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------------------------------------------------------------------
+   Navbar (desktop stays transparent over the dark hero exactly as before;
+   the scrolled and mobile-collapsed states flip to a light surface)
+   --------------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+  [data-theme='light'] .ftco-navbar-light {
+    background: var(--surface-solid) !important;
+  }
+
+  [data-theme='light'] .ftco-navbar-light .navbar-brand {
+    color: var(--heading) !important;
+  }
+
+  [data-theme='light'] .ftco-navbar-light .navbar-toggler {
+    color: var(--heading) !important;
+  }
+
+  [data-theme='light'] .ftco-navbar-light .navbar-nav > .nav-item > .nav-link {
+    color: var(--heading);
+  }
+
+  [data-theme='light'] .ftco-navbar-light .navbar-nav > .nav-item.active > .nav-link {
+    color: var(--accent-text);
+  }
+}
+
+[data-theme='light'] .ftco-navbar-light.scrolled {
+  background: var(--surface-solid) !important;
+  box-shadow: 0 12px 30px -16px rgba(15, 20, 28, 0.28);
+}
+
+[data-theme='light'] .ftco-navbar-light.scrolled .navbar-brand,
+[data-theme='light'] .ftco-navbar-light.scrolled .navbar-brand:hover,
+[data-theme='light'] .ftco-navbar-light.scrolled .navbar-brand:focus {
+  color: var(--heading) !important;
+}
+
+[data-theme='light'] .ftco-navbar-light.scrolled .navbar-toggler {
+  color: var(--heading) !important;
+}
+
+[data-theme='light'] .ftco-navbar-light.scrolled .nav-item > .nav-link {
+  color: var(--heading) !important;
+}
+
+[data-theme='light'] .ftco-navbar-light.scrolled .nav-item.active > a {
+  color: var(--accent-text) !important;
+}
+
+[data-theme='light'] .ftco-navbar-light.scrolled .nav-item.cta > a,
+[data-theme='light'] .ftco-navbar-light.scrolled .nav-item.cta > a span {
+  color: var(--btn-primary-fg) !important;
+  background: var(--accent) !important;
+}
+
+/* ---------------------------------------------------------------------
+   Resume / Services cards
+   --------------------------------------------------------------------- */
+[data-theme='light'] .resume-wrap,
+[data-theme='light'] .services-1 {
+  background: var(--surface);
+}
+
+[data-theme='light'] .services-1 {
+  box-shadow: 0 18px 50px -26px rgba(15, 20, 28, 0.22);
+}
+
+[data-theme='light'] .resume-wrap .date {
+  color: var(--accent-text);
+}
+
+[data-theme='light'] .services-1 .icon i {
+  color: var(--accent-text);
+}
+
+[data-theme='light'] .services-1 .desc h3,
+[data-theme='light'] .services-1 .desc h3 a {
+  color: var(--heading);
+}
+
+[data-theme='light'] .services-1 .desc span {
+  color: var(--accent-text);
+}
+
+/* ---------------------------------------------------------------------
+   About
+   --------------------------------------------------------------------- */
+[data-theme='light'] .ftco-about ul.about-info li span:first-child {
+  color: var(--heading);
+}
+
+[data-theme='light'] .ftco-about .counter-wrap .text p span {
+  color: var(--heading);
+}
+
+[data-theme='light'] .ftco-about .counter-wrap .text p span.number {
+  color: var(--accent-text);
+}
+
+/* ---------------------------------------------------------------------
+   Skills
+   --------------------------------------------------------------------- */
+[data-theme='light'] .progress-wrap .progress-bar span {
+  color: var(--heading);
+}
+
+/* ---------------------------------------------------------------------
+   Blog list, post info, sidebar, comments
+   --------------------------------------------------------------------- */
+[data-theme='light'] .blog-entry .heading a {
+  color: var(--heading);
+}
+
+[data-theme='light'] .blog-entry .heading a:hover,
+[data-theme='light'] .blog-entry .heading a:focus,
+[data-theme='light'] .blog-entry .heading a:active {
+  color: var(--accent-text);
+}
+
+[data-theme='light'] .blog-entry .meta span,
+[data-theme='light'] .blog-entry .meta a {
+  color: var(--accent-text);
+}
+
+[data-theme='light'] .post-info {
+  color: var(--heading);
+}
+
+[data-theme='light'] .block-21 .heading a {
+  color: var(--heading);
+}
+
+[data-theme='light'] .block-21 .heading a:hover,
+[data-theme='light'] .block-21 .heading a:active,
+[data-theme='light'] .block-21 .heading a:focus {
+  color: var(--accent-text);
+}
+
+[data-theme='light'] .categories li a {
+  color: var(--heading);
+}
+
+[data-theme='light'] .tagcloud a {
+  color: var(--heading);
+  border: 1px solid var(--border);
+}
+
+[data-theme='light'] .comment-body .meta {
+  color: var(--accent-text);
+}
+
+[data-theme='light'] .comment-body .reply {
+  background: rgba(15, 20, 28, 0.06);
+  color: var(--heading);
+}
+
+[data-theme='light'] .block-27 ul li a,
+[data-theme='light'] .block-27 ul li span {
+  color: var(--success-text);
+  border-color: var(--border);
+}
+
+/* ---------------------------------------------------------------------
+   Contact
+   --------------------------------------------------------------------- */
+[data-theme='light'] .contact-section .contact-info p a {
+  color: var(--heading);
+}
+
+[data-theme='light'] .contact-section .box .icon {
+  background: rgba(15, 20, 28, 0.06);
+}
+
+[data-theme='light'] .contact-section .box .icon span {
+  color: var(--accent-text);
+}
+
+[data-theme='light'] .contact-section .contact-form.bg-light {
+  border: 1px solid var(--border);
+}
+
+/* ---------------------------------------------------------------------
+   Reduced motion guards for the added controls
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle,
+  .scroll-top {
+    transition: none;
+  }
+}

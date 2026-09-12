@@ -111,3 +111,47 @@
     border-color: #a0f669;
   }
 }
+
+:host-context([data-theme='light']) {
+  .project-detail__meta {
+    color: rgba(15, 20, 28, 0.62);
+
+    span + span::before {
+      color: var(--success-text);
+    }
+  }
+
+  .project-detail__panel {
+    background: var(--surface);
+
+    p {
+      color: #3a4150;
+    }
+  }
+
+  .project-detail__panel-title {
+    color: var(--success-text);
+  }
+
+  .project-detail__tech {
+    color: #3b4252;
+    border-color: rgba(15, 20, 28, 0.25);
+
+    &:hover {
+      color: var(--accent-text);
+      border-color: rgba(255, 189, 57, 0.8);
+    }
+  }
+
+  .btn-secondary-outline {
+    color: var(--success-text);
+    border-color: rgba(31, 122, 45, 0.45);
+
+    &:hover,
+    &:focus {
+      color: #ffffff;
+      background: #2f7d2f;
+      border-color: #2f7d2f;
+    }
+  }
+}
