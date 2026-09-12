@@ -64,6 +64,20 @@ export class BlogListComponent implements AfterViewInit, OnDestroy {
     return this.commentCounts()[article.id ?? ''] ?? 0;
   }
 
+  protected blogExcerpt(article: Article): string {
+    const text = (article.content || '').replace(/\s+/g, ' ').trim();
+    if (!text) {
+      return 'No preview available.';
+    }
+    const max = 100;
+    if (text.length <= max) {
+      return text;
+    }
+    const cut = text.slice(0, max);
+    const lastSpace = cut.lastIndexOf(' ');
+    return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut) + '…';
+  }
+
   private subscribeCommentCounts(list: Article[]): void {
     this.commentSubscriptions.forEach((s) => s.unsubscribe());
     this.commentSubscriptions = [];

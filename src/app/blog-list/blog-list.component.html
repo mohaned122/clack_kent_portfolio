@@ -43,7 +43,7 @@
                         </div>
                         <h3 class="heading"><a [routerLink]="['/blog', article.id]">{{ article.title }}</a></h3>
                         <span class="text-uppercase font-weight-bold" style="color: #ffbd39; font-size: 13px;">{{ article.type }}</span>
-                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                        <p>{{ blogExcerpt(article) }}</p>
                         <p><a [routerLink]="['/blog', article.id]" class="btn-custom">Continue Reading <span class="icon-long-arrow-right"></span></a></p>
                       </div>
                     </div>

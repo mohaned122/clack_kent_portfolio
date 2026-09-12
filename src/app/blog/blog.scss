@@ -1,0 +1,35 @@
+.ftco-section .container .col-lg-8.ftco-animate {
+  > h2 {
+    color: #ffffff;
+    font-size: 28px;
+    line-height: 1.4;
+    font-weight: 500;
+
+    @media (max-width: 575.98px) {
+      font-size: 24px;
+      line-height: 1.35;
+    }
+  }
+
+  > p {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 18px;
+    line-height: 1.9;
+    margin-bottom: 1.4em;
+
+    img {
+      margin-top: 0.4em;
+    }
+
+    @media (max-width: 575.98px) {
+      font-size: 17px;
+      line-height: 1.85;
+    }
+  }
+
+  > .meta {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+}
